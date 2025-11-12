@@ -1,0 +1,110 @@
+﻿@model LanBasedHelpDeskTickingSystem.Entities.DTOs.RegisterDto
+@{
+    ViewData["Title"] = "Register Page";
+}
+
+<section class="min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">
+            Sign in to your account
+        </h1>
+
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Username</label>
+                <input
+                    asp-for="Username"
+                    type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:text-gray-900 focus:border-blue-500 disabled:opacity-30 block w-full p-2.5 mt-1"
+                    placeholder="Enter your username"/>
+                <p id="error-username" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                    asp-for="Email"
+                    type="email"
+                    class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:text-gray-900 focus:border-blue-500 disabled:opacity-30 block w-full p-2.5 mt-1"
+                    placeholder="Enter your email"/>
+                <p id="error-email" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                <input asp-for="Password" type="password"
+                       class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 disabled:opacity-30 focus:text-gray-900  
+                        focus:border-blue-500 block w-full p-2.5 mt-1" placeholder="Enter your password"/>
+                <p id="error-password" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Retype Password</label>
+                <input asp-for="RetypePassword" type="password"
+                       class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 disabled:opacity-30 focus:text-gray-900  
+                        focus:border-blue-500 block w-full p-2.5 mt-1" placeholder="Repeat your password"/>
+                <p id="error-retypepassword" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+
+            </div>
+
+            <button id="btn" type="submit"
+                    class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none 
+                    focus:ring-blue-300 disabled:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                Register
+            </button>
+
+            <div class="flex items-center justify-center">
+                <span class="text-gray-500 text-sm">or</span>
+            </div>
+
+            <a href="#"
+               class="flex items-center justify-center w-full border border-gray-300 text-gray-700 
+                                bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                font-medium rounded-lg text-sm px-5 py-2.5 text-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+                     alt="Microsoft" class="w-5 h-5">
+                Register with Microsoft 365
+            </a>
+
+            <p class="text-sm text-center text-gray-500 mt-4">
+                Already have an account?
+                <a asp-controller="Auth" asp-action="Login" class="text-blue-600 hover:underline">Register</a>
+            </p>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/actions/auth.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const input_username = document.getElementById("Username");
+            const input_email = document.getElementById("Email");
+            const input_password = document.getElementById("Password");
+            const retype_password = document.getElementById("RetypePassword");
+            
+            document.getElementById("registerForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+               
+                
+                const formData = {
+                    Username: input_username.value,
+                    Email: input_email.value,
+                    Password: input_password.value,
+                    RetypePassword: retype_password.value
+                };
+                
+                console.log(formData)
+                
+                await authForm("registerForm", "btn", formData, "/api/auth/register", () => {
+                    input_username.disabled = false;
+                    input_email.disabled = false;
+                    input_password.disabled = false;
+                    retype_password.disabled = false;
+                });
+            });
+           
+        });
+    </script>
+}

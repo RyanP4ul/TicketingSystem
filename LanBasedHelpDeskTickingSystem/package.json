@@ -1,0 +1,23 @@
+{
+  "name": "lanbasedhelpdesktickingsystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./Styles/input.css -o ./wwwroot/css/site.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.16",
+    "daisyui": "^5.4.5",
+    "flowbite": "^3.1.2",
+    "tailwindcss": "^3.4.18"
+  }
+}

@@ -1,0 +1,72 @@
+﻿@using LanBasedHelpDeskTickingSystem.Entities.Enums
+@{
+    var controller = (string?) ViewContext.RouteData.Values["controller"];
+    var action = (string?) ViewContext.RouteData.Values["action"];
+}
+
+<div class="bg-white p-3">
+    <nav class="max-w-screen-xl mx-auto flex items-center justify-between w-full pr-6 pl-6">
+
+        <div class="flex items-center space-x-4">
+            
+            @if (User.IsInRole(nameof(UserRole.Admin)))
+            {
+                <a asp-area="Admin" asp-controller="Admin" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "Admin" && action == "Index" ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path fill-rule="evenodd" d="M4.25 2A2.25 2.25 0 002 4.25v2.5A2.25 2.25 0 004.25 9h2.5A2.25 2.25 0 009 6.75v-2.5A2.25 2.25 0 006.75 2h-2.5zm0 9A2.25 2.25 0 002 13.25v2.5A2.25 2.25 0 004.25 18h2.5A2.25 2.25 0 009 15.75v-2.5A2.25 2.25 0 006.75 11h-2.5zm9-9A2.25 2.25 0 0011 4.25v2.5A2.25 2.25 0 0013.25 9h2.5A2.25 2.25 0 0018 6.75v-2.5A2.25 2.25 0 0015.75 2h-2.5zm0 9A2.25 2.25 0 0011 13.25v2.5A2.25 2.25 0 0013.25 18h2.5A2.25 2.25 0 0018 15.75v-2.5A2.25 2.25 0 0015.75 11h-2.5z" clip-rule="evenodd"/>
+                    </svg>
+                    Dashboard
+                </a>
+                
+                <a asp-area="Admin" asp-controller="Ticket" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "Ticket" && (action == "Index" || action == "Ticket") ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path d="M1.905 6.475C1.658 6.228 1.458 5.898 1.38 5.54C1.295 5.158 1.25 4.762 1.25 4.354V3.75A2.75 2.75 0 014 1h12a2.75 2.75 0 012.75 2.75v.604c0 .408-.045.804-.13 1.186c-.078.358-.278.688-.525.935l-3.236 3.236a.75.75 0 000 1.06l3.236 3.236c.247.247.447.577.525.935C18.705 15.8 18.75 16.196 18.75 16.604v.604A2.75 2.75 0 0116 20H4a2.75 2.75 0 01-2.75-2.75v-.604c0-.408.045-.804.13-1.186c.078-.358.278-.688.525-.935l3.236-3.236a.75.75 0 000-1.06L1.905 6.475zM3.75 3.25a.75.75 0 000 1.5h12.5a.75.75 0 000-1.5H3.75z"/>
+                    </svg>
+                    All Tickets
+                </a>
+
+                <a href="#" class="flex items-center px-4 py-2 font-medium text-gray-700 rounded-lg hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    Users
+                </a>
+                
+                <a asp-area="Admin" asp-controller="KnowledgeBase" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "KnowledgeBase" && action == "Index" ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path d="M12 10.4V20M12 10.4C12 8.15979 12 7.03969 11.564 6.18404C11.1805 5.43139 10.5686 4.81947 9.81596 4.43597C8.96031 4 7.84021 4 5.6 4H4.6C4.03995 4 3.75992 4 3.54601 4.10899C3.35785 4.20487 3.20487 4.35785 3.10899 4.54601C3 4.75992 3 5.03995 3 5.6V16.4C3 16.9601 3 17.2401 3.10899 17.454C3.20487 17.6422 3.35785 17.7951 3.54601 17.891C3.75992 18 4.03995 18 4.6 18H7.54668C8.08687 18 8.35696 18 8.61814 18.0466C8.84995 18.0879 9.0761 18.1563 9.29191 18.2506C9.53504 18.3567 9.75977 18.5065 10.2092 18.8062L12 20M12 10.4C12 8.15979 12 7.03969 12.436 6.18404C12.8195 5.43139 13.4314 4.81947 14.184 4.43597C15.0397 4 16.1598 4 18.4 4H19.4C19.9601 4 20.2401 4 20.454 4.10899C20.6422 4.20487 20.7951 4.35785 20.891 4.54601C21 4.75992 21 5.03995 21 5.6V16.4C21 16.9601 21 17.2401 20.891 17.454C20.7951 17.6422 20.6422 17.7951 20.454 17.891C20.2401 18 19.9601 18 19.4 18H16.4533C15.9131 18 15.643 18 15.3819 18.0466C15.15 18.0879 14.9239 18.1563 14.7081 18.2506C14.465 18.3567 14.2402 18.5065 13.7908 18.8062L12 20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Knowledge Base
+                </a>
+            }
+            else if (User.IsInRole(nameof(UserRole.User)))
+            {
+                <a asp-area="User" asp-controller="User" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "Student" && action == "Index" ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path fill-rule="evenodd" d="M4.25 2A2.25 2.25 0 002 4.25v2.5A2.25 2.25 0 004.25 9h2.5A2.25 2.25 0 009 6.75v-2.5A2.25 2.25 0 006.75 2h-2.5zm0 9A2.25 2.25 0 002 13.25v2.5A2.25 2.25 0 004.25 18h2.5A2.25 2.25 0 009 15.75v-2.5A2.25 2.25 0 006.75 11h-2.5zm9-9A2.25 2.25 0 0011 4.25v2.5A2.25 2.25 0 0013.25 9h2.5A2.25 2.25 0 0018 6.75v-2.5A2.25 2.25 0 0015.75 2h-2.5zm0 9A2.25 2.25 0 0011 13.25v2.5A2.25 2.25 0 0013.25 18h2.5A2.25 2.25 0 0018 15.75v-2.5A2.25 2.25 0 0015.75 11h-2.5z" clip-rule="evenodd"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a asp-area="User" asp-controller="Ticket" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "Ticket" && action == "Index" ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path d="M1.905 6.475C1.658 6.228 1.458 5.898 1.38 5.54C1.295 5.158 1.25 4.762 1.25 4.354V3.75A2.75 2.75 0 014 1h12a2.75 2.75 0 012.75 2.75v.604c0 .408-.045.804-.13 1.186c-.078.358-.278.688-.525.935l-3.236 3.236a.75.75 0 000 1.06l3.236 3.236c.247.247.447.577.525.935C18.705 15.8 18.75 16.196 18.75 16.604v.604A2.75 2.75 0 0116 20H4a2.75 2.75 0 01-2.75-2.75v-.604c0-.408.045-.804.13-1.186c.078-.358.278-.688.525-.935l3.236-3.236a.75.75 0 000-1.06L1.905 6.475zM3.75 3.25a.75.75 0 000 1.5h12.5a.75.75 0 000-1.5H3.75z"/>
+                    </svg>
+                    My Tickets
+                </a>
+                <a asp-area="User" asp-controller="KnowledgeBase" asp-action="Index" class="flex items-center px-4 py-2 font-medium @(controller == "KnowledgeBase" && action == "Index" ? "text-blue-600 bg-blue-100 rounded-lg" : "text-gray-700 rounded-lg hover:bg-gray-100")">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path d="M12 10.4V20M12 10.4C12 8.15979 12 7.03969 11.564 6.18404C11.1805 5.43139 10.5686 4.81947 9.81596 4.43597C8.96031 4 7.84021 4 5.6 4H4.6C4.03995 4 3.75992 4 3.54601 4.10899C3.35785 4.20487 3.20487 4.35785 3.10899 4.54601C3 4.75992 3 5.03995 3 5.6V16.4C3 16.9601 3 17.2401 3.10899 17.454C3.20487 17.6422 3.35785 17.7951 3.54601 17.891C3.75992 18 4.03995 18 4.6 18H7.54668C8.08687 18 8.35696 18 8.61814 18.0466C8.84995 18.0879 9.0761 18.1563 9.29191 18.2506C9.53504 18.3567 9.75977 18.5065 10.2092 18.8062L12 20M12 10.4C12 8.15979 12 7.03969 12.436 6.18404C12.8195 5.43139 13.4314 4.81947 14.184 4.43597C15.0397 4 16.1598 4 18.4 4H19.4C19.9601 4 20.2401 4 20.454 4.10899C20.6422 4.20487 20.7951 4.35785 20.891 4.54601C21 4.75992 21 5.03995 21 5.6V16.4C21 16.9601 21 17.2401 20.891 17.454C20.7951 17.6422 20.6422 17.7951 20.454 17.891C20.2401 18 19.9601 18 19.4 18H16.4533C15.9131 18 15.643 18 15.3819 18.0466C15.15 18.0879 14.9239 18.1563 14.7081 18.2506C14.465 18.3567 14.2402 18.5065 13.7908 18.8062L12 20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Knowledge Base
+                </a>
+            }
+
+            
+
+        </div>
+
+            <div class="flex items-center justify-center w-10 h-10 font-medium text-indigo-700 bg-indigo-100 rounded-full">
+                CN
+            </div>
+
+        </nav>
+</div>
+

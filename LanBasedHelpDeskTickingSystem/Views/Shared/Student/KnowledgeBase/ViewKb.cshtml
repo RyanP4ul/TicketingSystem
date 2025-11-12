@@ -1,0 +1,27 @@
+﻿@model LanBasedHelpDeskTickingSystem.Entities.Models.KnowledgeBase
+@{
+    ViewData["Title"] = "KnowledgeBase";
+}
+
+@await Html.PartialAsync("_Navbar")
+<section class="container mx-auto max-w-screen-xl p-6">
+    <a asp-area="User" asp-action="Index" asp-controller="KnowledgeBase" class="flex items-center text-sm font-medium text-blue-600 hover:underline mb-4">
+        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0l4-4M1 5l4 4"/>
+        </svg>
+        Back to my KB
+    </a>
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">@Model.Title</h1>
+    </div>
+
+    <div id="content" class="prose bg-white dark:prose-dark max-w-none rounded-sm p-4">Loading...</div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("content").innerHTML = `@Html.Raw(Model.Content)`;
+        });
+    </script>
+}

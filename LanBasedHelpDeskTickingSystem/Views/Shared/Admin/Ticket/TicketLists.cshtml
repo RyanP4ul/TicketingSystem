@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Admin Tickets";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<div class="max-w-screen-xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold">All Tickets</h1>
+            <p class="text-gray-500 text-sm">Manage and track all help desk tickets</p>
+        </div>
+        <button
+            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 4v16m8-8H4">
+                </path>
+            </svg>
+            Export CSV
+        </button>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <input id="search" type="text" placeholder="Search" class="col-span-2 border border-gray-300 rounded-lg px-3 py-2 text-gray-500 focus:text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option>All Status</option>
+                <option selected>Open</option>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+            </select>
+            <select id="categoryFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option>All Categories</option>
+                <option>Printer</option>
+                <option>Projector</option>
+                <option>Network</option>
+                <option>Other</option>
+            </select>
+            <select id="priorityFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option>All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="listContainer" class="space-y-4"></div>
+    
+    <div id="skeleton" role="status" class="animate-pulse space-y-4 mt-6">
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+    </div>
+
+    <nav aria-label="Ticket Pagination" class="mt-6 flex justify-center align-items-center w-full">
+        <ul id="pagination" class="inline-flex -space-x-px text-base h-10"></ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script src="~/js/libs/utils.js"></script>
+    <script src="~/js/libs/pagination.js"></script>
+    <script>
+          let currentPage = 1;
+          let limit = 10;
+          let search = "";
+          let status = "open";
+          let category = "";
+          let priority = "";
+          let isLoading = false;
+          
+          function ticketListItem(ticket)
+          {
+              return `
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-start">
+                      <div>
+                        <h2 class="font-semibold text-gray-800">${ticket.title}</h2>
+                        <p class="text-sm text-gray-600 mt-1">
+                          ${ticket.description}
+                        </p>
+                        <div class="flex items-center gap-3 mt-3 text-sm text-gray-500">
+                          <div class="flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+                                d="M5.121 17.804A13.937 13.937 0 0112 15c2.42 0 4.675.57 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            ${ticket.requester?.username ?? "Unknown User"}
+                          </div>
+                          <div class="flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                              viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v11a2 2 0 002 2z"></path></svg>
+                            <div>${new Date(ticket.createdAt).toLocaleDateString()}</div>
+                          </div>
+                          <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-300">${ticket.category.name}</span>
+                            <div>${getStatusBadge(ticket.status)}</div>
+                            <div>${getPriorityBadge(ticket.priority)}</div>
+                        </div>
+                      </div>
+                      <a href="/Admin/Tickets/${ticket.id}" class="text-blue-600 font-medium hover:underline flex items-center gap-1">View
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                          viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5l7 7-7 7"></path></svg>
+                      </a>
+                    </div>
+              `;
+          }
+          
+          function handleSearch(value)
+          {
+                search = value;
+                loadLists(1);
+          }
+          
+          async function loadLists(page)
+          {
+              isLoading = true;
+              currentPage = page;
+              
+               toggleSkeleton(true);
+              
+              const response = await fetch(`/api/admin/tickets?page=${currentPage}&limit=${limit}${search.length > 0 ? `&search=${search}` : ``}${status.length > 0 ? `&status=${status}` : ``}${category.length > 0 ? `&category=${category}` : ``}${priority.length > 0 ? `&priority=${priority}` : ``}`, {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" }
+              });
+
+              if (!response.ok) {
+                  console.error("Failed to load tickets");
+                  return;
+              }
+
+              const result = await response.json();
+              const container = document.getElementById("listContainer");
+              
+              container.innerHTML = '';
+                           
+              result.data.map((title) => container.innerHTML += ticketListItem(title));
+              
+              container.innerHTML += `<p class="text-gray-500 text-md">Total Row(s): ${result.data.length}</p>`;
+              
+              buildPagination(page, result.totalPages);
+              
+              isLoading = false;
+              toggleSkeleton(false);
+          }
+          
+          function handeStatusChange(e) {
+               status = e.target.value === "All Status" ? "" : e.target.value;
+               loadLists(1);
+          }
+               
+          function handleCategoryChange(e) {
+               category = e.target.value === "All Categories" ? "" : e.target.value;
+               loadLists(1);
+          }
+          
+          function handePriorityChange(e) {
+               priority = e.target.value === "All Priorities" ? "" : e.target.value;
+               loadLists(1);
+          }
+          
+          document.addEventListener("DOMContentLoaded", async () => {
+                document.getElementById('search').addEventListener("input", debounce((e) => handleSearch(e.target.value), 700));
+                document.getElementById('statusFilter').addEventListener("change", handeStatusChange);
+                document.getElementById('categoryFilter').addEventListener("change", handleCategoryChange);
+                document.getElementById('priorityFilter').addEventListener("change", handePriorityChange);
+                await loadLists(currentPage);
+          });
+      </script>
+}

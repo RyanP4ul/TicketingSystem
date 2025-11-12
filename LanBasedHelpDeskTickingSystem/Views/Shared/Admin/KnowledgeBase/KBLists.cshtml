@@ -1,0 +1,423 @@
+﻿@using LanBasedHelpDeskTickingSystem.Entities.Models
+@model LanBasedHelpDeskTickingSystem.Entities.DTOs.AdminKbDto
+@{
+    ViewData["Title"] = "Admin Knowledge Base";
+    const string modalForm = "form-modal";
+    const string modelConfirm = "confirm-article-modal";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<div id="@modalForm" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    KB Article
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="@modalForm">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+
+            <div class="p-4 md:p-5">
+                <form id="form" class="space-y-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+                        <input asp-for="Title" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter article title" required/>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
+                        <textarea  asp-for="Content" rows="4" class="block w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..." required></textarea>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                              <select asp-for="CategoryId" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <option value="-1" selected>Choose a category</option>
+                                @foreach (Category category in ViewBag.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                              </select>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+                            <input asp-for="Tags" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter tags" required/>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-btn w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="@modelConfirm" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="@modelConfirm">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to continue</h3>
+                <button data-modal-hide="@modelConfirm" type="button" class="confirm-btn text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    Yes, I'm sure
+                </button>
+                <button data-modal-hide="@modelConfirm" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-screen-xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold">Knowledge Base</h1>
+            <p class="text-gray-500 text-sm">Manage help articles and documentation</p>
+        </div>
+        <button data-modal-toggle="@modalForm" data-modal-target="@modalForm" class="insert-btn flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New KB Article
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-6">
+
+        <div class="flex justify-between items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+            <div>
+                <h3 class="text-sm font-medium opacity-80">Total Articles</h3>
+                <p class="text-3xl font-bold mt-1">@ViewBag.TotalArticles</p>
+            </div>
+            <div class="bg-blue-400/30 p-3 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5l-3 3m0 0l-3-3m3 3v7.5M19.5 12a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center bg-gradient-to-r from-amber-500 to-yellow-600 text-white p-6 rounded-xl shadow-lg">
+            <div>
+                <h3 class="text-sm font-medium opacity-80">Published</h3>
+                <p class="text-3xl font-bold mt-1">@ViewBag.TotalPublishedArticles</p>
+            </div>
+            <div class="bg-orange-400/30 p-3 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+            <div>
+                <h3 class="text-sm font-medium opacity-80">Drafts</h3>
+                <p class="text-3xl font-bold mt-1">0</p>
+            </div>
+            <div class="bg-blue-400/30 p-3 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
+            <div>
+                <h3 class="text-sm font-medium opacity-80">Total Views</h3>
+                <p class="text-3xl font-bold mt-1">@ViewBag.TotalViewArticles</p>
+            </div>
+            <div class="bg-green-400/30 p-3 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m1.5 2a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <input id="search" type="text" placeholder="Search" class="col-span-2 border border-gray-300 rounded-lg px-3 py-2 text-gray-500 focus:text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            <select id="categoryFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option>All Categories</option>
+                @foreach (Category category in ViewBag.Categories)
+                {
+                    <option value="@category.Name">@category.Name</option>
+                }
+            </select>
+            <select id="dateFilter" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option>Newest First</option>
+                <option>Oldest First</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="listContainer" class="space-y-4"></div>
+
+    <div id="skeleton" role="status" class="animate-pulse space-y-4 mt-6">
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+        <div class="w-full h-[150px] bg-gray-200 rounded-md dark:bg-gray-700"></div>
+    </div>
+
+    <nav aria-label="Ticket Pagination" class="mt-6 flex justify-center align-items-center w-full">
+        <ul id="pagination" class="inline-flex -space-x-px text-base h-10"></ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script src="~/js/libs/utils.js"></script>
+    <script src="~/js/libs/pagination.js"></script>
+    <script>
+    
+        const limit = 10;
+        let currentPage = 1;
+        let search = "";
+        let category = "";
+        let id = -1;
+        let type = "";
+        
+        function ticketListItem(item)
+        {
+            const tags = item.tags === "none" ? [] : String(item.tags).split(",");
+            return `
+                <div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col p-4 gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-900">
+                                    ${item.title}
+                                </h2>
+                                <div class="flex flex-wrap items-center gap-2 mt-2">
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">${item.isPublished ? "Published" : "Unpublished"}</span>
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1 rounded-full">${item.category.name}</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mt-4 sm:mt-0">
+                                <button data-id="${item.id}" data-type="publish" class="publish-btn text-sm bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-medium px-4 py-2 rounded-lg transition">
+                                    ${item.isPublished ? "Published" : "Unpublished"}
+                                </button>
+                                <button data-id="${item.id}" data-type="edit" class="edit-btn text-sm bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-800 font-medium px-4 py-2 rounded-lg transition">
+                                    Edit
+                                </button>
+                                <button data-id="${item.id}" data-type="delete" class="delete-btn text-sm bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 font-medium px-4 py-2 rounded-lg transition">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            ${item.content.substring(0, 130)}...
+                        </p>
+                    
+                        <div class="flex flex-wrap items-center justify-between text-sm text-gray-500 mt-2">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5l-3 3m0 0l-3-3m3 3v7.5M19.5 12a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+                                    </svg>
+                                    <span>${item.author.username}</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-10 4h10m-7 4h4m-7 0H5m14-4v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6m14 0H5" />
+                                    </svg>
+                                    <span>${new Date(item.createdAt).toLocaleDateString('en-US')}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+                                ${tags.map(tag => `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-md text-xs font-medium">#${tag.trim()}</span>`).join('')}
+                            </div>
+                        </div>
+                    
+                    </div>
+            `;
+        }
+        
+        function handleSearch(value)
+        {
+            search = value;
+            loadLists(1);
+        }
+
+        async function handleFormSubmit(e)
+        {
+            e.preventDefault();
+            
+            const data = {
+                 Title: document.querySelector('input[id="Title"]').value,
+                 Content: document.querySelector('textarea[id="Content"]').value,
+                 CategoryId: parseInt(document.querySelector('select[id="CategoryId"]').value),
+                 Tags: document.querySelector('input[id="Tags"]').value
+             };
+            
+            if (id > 0) data.id = id;
+            
+            const response = await fetch(`/api/admin/kb`, {
+                method: type === "edit" ? "PUT" : "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+                credentials: "include"
+            });
+            
+            if (!response.ok && data.errors) {
+                Object.keys(data.errors).forEach(key => {
+                    const errorDiv = document.getElementById(`error-${key.toLowerCase()}`);
+                    const inputField = document.getElementById(key);
+                    if (errorDiv) errorDiv.textContent = data.errors[key][0];
+                    if (inputField) {
+                        inputField.classList.remove("border-gray-300");
+                        inputField.classList.add("border-red-600");
+                    }
+                });
+            }
+
+            await loadLists(1);
+        }
+        
+        function handleInsertBtn()
+        {
+            id = -1;
+            type = "insert"
+        }
+          
+          async function handleConfirm()
+          {
+              if (type === "delete")
+              {
+                  await fetch(`/api/admin/kb/${id}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+                });
+              }
+              else if (type === "publish")
+              {
+                    await fetch(`/api/admin/kb/publish/${id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include"
+                    });
+                  // console.log(`DELETE PUBLISH ID: ${id} TYPE: ${type}`);
+              }
+
+              await loadLists(1);
+          }
+          
+          function handleCategoryChange(e) {
+                 category = e.target.value === "All Categories" ? "" : e.target.value;
+                 loadLists(1);
+            }
+          
+          function renderEmpty()
+          {
+              return `
+              <div class="flex flex-col items-center text-gray-100 space-y-3 m-6">
+                  <div class="bg-gray-500 p-4 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="white" class="w-8 h-8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h2.5a2 2 0 012 2v1h5V7a2 2 0 012-2H19a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                    </svg>
+                  </div>
+                  <h2 class="text-lg font-medium text-gray-900">Empty</h2>
+                  <p class="text-sm text-gray-700 max-w-sm">
+                      You haven't created anything yet!
+                  </p>
+              </div>
+              `;
+          }
+
+        async function loadLists(page)
+        {
+            toggleSkeleton(true);
+            
+            currentPage = page;
+            
+            const response = await fetch(`/api/admin/kb?page=${currentPage}&limit=${limit}${search.length > 0 ? `&search=${search}` : ``}${category.length > 0 ? `&category=${category}` : ``}`, {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include"
+              });
+    
+            if (!response.ok) {
+                 console.error("Failed to load tickets");
+                 return;
+            }
+              
+             const result = await response.json();
+             const container = document.getElementById("listContainer");
+             
+             container.innerHTML = "";
+             
+             result.data.map((title) => container.innerHTML += ticketListItem(title));
+             
+             if (result.data.length < 1) {
+                  container.innerHTML = renderEmpty();
+             }
+
+           container.innerHTML += `<p class="text-gray-500 text-md">Total Row(s): ${result.data.length}</p>`;
+             
+             // Attach Event Listeners in Confirmation
+            container.querySelectorAll(".publish-btn, .delete-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    id = e.currentTarget.dataset.id
+                    type = e.currentTarget.dataset.type;
+                });
+                
+                btn.setAttribute("data-modal-toggle", "@modelConfirm");
+                btn.setAttribute("data-modal-target", "@modelConfirm");
+                
+                document.querySelector(".confirm-btn").addEventListener("click", handleConfirm);
+            });
+            
+            container.querySelectorAll(".edit-btn").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    id = e.currentTarget.dataset.id;
+                    type = e.currentTarget.dataset.type;
+                    
+                    await fetch(`/api/admin/kb/${id}`, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include"
+                    }).then(res => res.json())
+                      .then(result => {
+                          document.querySelector('input[id="Title"]').value = result.data.title;
+                          document.querySelector('textarea[id="Content"]').value = result.data.content;
+                          document.querySelector('select[id="CategoryId"]').value = result.data.categoryId;
+                          document.querySelector('input[id="Tags"]').value = result.data.tags;
+                      });
+                });
+                
+                btn.setAttribute("data-modal-toggle", "@modalForm");
+                btn.setAttribute("data-modal-target", "@modalForm");
+            });
+        
+           buildPagination(page, result.totalPages);  
+           toggleSkeleton(false);
+           
+           if (typeof initFlowbite === "function") initFlowbite();
+        }
+    
+        document.addEventListener("DOMContentLoaded", async () => {
+            const popupModalEl = document.getElementById("@modelConfirm");
+            const newKbModalEl = document.getElementById("@modalForm");
+
+            if (popupModalEl) window.popupModal = new Modal(popupModalEl);
+            if (newKbModalEl) window.newKbModal = new Modal(newKbModalEl);
+            
+            document.getElementById('search').addEventListener("input", debounce((e) => handleSearch(e.target.value), 700));
+            document.getElementById('categoryFilter').addEventListener("change", handleCategoryChange);
+            document.querySelector('.form-btn').addEventListener("click", handleFormSubmit);
+            document.querySelector('.insert-btn').addEventListener("click", handleInsertBtn);
+            
+            await loadLists(currentPage);
+        });
+    </script>
+}

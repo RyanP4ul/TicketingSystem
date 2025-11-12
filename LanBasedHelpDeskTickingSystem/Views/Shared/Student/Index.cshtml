@@ -1,0 +1,112 @@
+﻿@model LanBasedHelpDeskTickingSystem.Entities.Views.UserViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<section class="max-w-screen-xl mx-auto min-h-screen">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">Welcome back, @User.Identity?.Name</h1>
+                <p class="text-gray-500 text-sm">Here's an overview of your support tickets and quick actions</p>
+            </div>
+            <a asp-controller="Ticket" asp-action="Index"
+                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 4v16m8-8H4">
+                    </path>
+                </svg>
+                Manage Tickets
+            </a>
+        </div>
+
+        <div class="grid grid-cols-5 gap-4 mb-8">
+            <div class="bg-blue-600 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                <div>
+                    <p>Total Tickets</p>
+                    <h3 class="text-3xl font-bold">@Model.TotalTickets</h3>
+                </div>
+                <i class="fa-solid fa-ticket text-3xl"></i>
+            </div>
+
+            <div class="bg-amber-400 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                <div>
+                    <p>Pending</p>
+                    <h3 class="text-3xl font-bold">@Model.PendingTickets</h3>
+                </div>
+                <i class="fa-solid fa-clock text-3xl"></i>
+            </div>
+
+            <div class="bg-blue-500 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                <div>
+                    <p>In Progress</p>
+                    <h3 class="text-3xl font-bold">@Model.InProgressTickets</h3>
+                </div>
+                <i class="fa-solid fa-spinner text-3xl"></i>
+            </div>
+
+            <div class="bg-green-600 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                <div>
+                    <p>Resolved</p>
+                    <h3 class="text-3xl font-bold">@Model.ResolvedTickets</h3>
+                </div>
+                <i class="fa-solid fa-check text-3xl"></i>
+            </div>
+
+            <div class="bg-red-600 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                <div>
+                    <p>Closed</p>
+                    <h3 class="text-3xl font-bold">@Model.ClosedTickets</h3>
+                </div>
+                <i class="fa-solid fa-ban text-3xl"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-2 bg-white rounded-xl shadow p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-semibold text-gray-800">Recent Tickets</h2>
+                    <a href="#" class="text-blue-600 text-sm hover:underline">View All →</a>
+                </div>
+
+                @if (Model.Tickets.Any())
+                {
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <div class="border rounded-lg p-4 mb-3 hover:bg-gray-50">
+                            <h3 class="font-semibold text-gray-800">@ticket.Title</h3>
+                            <p class="text-gray-500 text-sm">@ticket.Description</p>
+                            <div class="flex items-center justify-between mt-3 text-sm text-gray-400">
+                                <div class="flex items-center gap-3">
+                                    <span>👤 @ticket.Requester?.Email</span>
+                                    <span>📅 @ticket.CreatedAt</span>
+                                    <span class="bg-gray-200 px-2 py-1 rounded text-gray-600">@ticket.Status</span>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:underline">View →</a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-gray-500">No recent tickets available.</p>
+                }
+            </div>
+
+            <!-- Ticket Categories -->
+            <div class="bg-white rounded-xl shadow p-4">
+                <h2 class="font-semibold text-gray-800 mb-4">Ticket Category</h2>
+
+                <div class="space-y-4">
+                    TICKETS
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>

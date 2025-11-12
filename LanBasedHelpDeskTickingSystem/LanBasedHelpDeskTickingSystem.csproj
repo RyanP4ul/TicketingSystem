@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0-rc.2.25502.107" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+      <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Areas\" />
+      <Folder Include="wwwroot\js\libs\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\AdminTicket\Index.cshtml" />
+    </ItemGroup>
+
+</Project>

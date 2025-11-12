@@ -1,0 +1,154 @@
+﻿@model LanBasedHelpDeskTickingSystem.Entities.Views.UserKbViewModel
+@{
+    ViewData["Title"] = "KnowledgeBase";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<section class="py-12 px-4 max-w-screen-xl mx-auto">
+
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Knowledge Base</h1>
+        <p class="text-lg text-gray-500 dark:text-gray-400">Find answers to common questions and get help with technology issues</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto mb-10">
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input type="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Tickets" required/>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <aside class="lg:col-span-1 space-y-6">
+
+            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Categories</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <span>All Articles</span>
+                            <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">5</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span>Network</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-xs">1</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span>Account</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-xs">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span>Devices</span>
+                            <span class="text-gray-500 dark:text-gray-400 text-xs">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Most Popular</h3>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" class="text-sm font-medium text-gray-900 dark:text-white hover:underline">How to connect to school wifi</a>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Network</p>
+                    </li>
+                    <li>
+                        <a href="#" class="text-sm font-medium text-gray-900 dark:text-white hover:underline">Reset elms password</a>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Account</p>
+                    </li>
+                </ul>
+            </div>
+
+        </aside>
+
+        <main class="lg:col-span-2">
+            <h4 id="totalArticle" class="text-sm text-gray-500 dark:text-gray-400 mb-4">4 articles found</h4>
+
+            <div id="listContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <nav aria-label="Ticket Pagination" class="mt-6 flex justify-center align-items-center w-full">
+                <ul id="pagination" class="inline-flex -space-x-px text-base h-10"></ul>
+            </nav>
+        </main>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/libs/utils.js"></script>
+    <script src="~/js/libs/pagination.js"></script>
+    <script>
+        let currentPage = 1;
+        let limit = 10;
+        let search = "";
+        let category = "";
+        
+        function ticketListItem(item)
+        {
+            const tags = item.tags.split(",");
+            
+            return `
+            
+            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700 flex flex-col justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Account</p>
+                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 hover:text-blue-700 dark:hover:text-blue-500">
+                        <a href="/User/KnowledgeBase/${item.id}">${item.title}</a>
+                    </h5>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${item.content.substring(0, 80)}...</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    ${tags.map(tag => `<span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">#${tag.trim()}</span>`).join('')}
+                </div>
+            </div>
+            
+            `;
+        }
+        
+        function handleSearch(value)
+        {
+              search = value;
+              loadLists(1);
+        }
+        async function loadLists(page)
+        {
+            currentPage = page;
+            
+            const response = await fetch(`/api/user/kb?page=${currentPage}&limit=${limit}${search.length > 0 ? `&search=${search}` : ``}${category.length > 0 ? `&category=${category}` : ``}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+            });
+            
+            if (!response.ok) {
+                console.error("Failed to load tickets");
+                return;
+            }
+            
+            const result = await response.json();
+            const container = document.getElementById("listContainer");
+            
+            container.innerHTML = "";
+                        
+            result.data.map((item) => container.innerHTML += ticketListItem(item));
+            
+            document.getElementById("totalArticle").innerText = `${result.total} articles found`;
+                          
+            buildPagination(page, result.totalPages);
+        }
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            document.getElementById('search').addEventListener("input", debounce((e) => handleSearch(e.target.value), 700));
+            await loadLists(currentPage);
+        });
+    </script>
+}
