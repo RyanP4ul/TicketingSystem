@@ -228,4 +228,5 @@ C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug
 C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\LanBasedHelpDeskTickingSystem.pdb
 C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\LanBasedHelpDeskTickingSystem.genruntimeconfig.cache
 C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\ref\LanBasedHelpDeskTickingSystem.dll
-C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\compressed\ma8h15sr0w-{0}-sftp7vizdl-sftp7vizdl.gz
+C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\LanBasedHelpDeskTickingSystem.sourcelink.json
+C:\Project\LanBasedHelpDeskTickingSystem\LanBasedHelpDeskTickingSystem\obj\Debug\net10.0\compressed\ma8h15sr0w-{0}-qrni1xufwi-qrni1xufwi.gz

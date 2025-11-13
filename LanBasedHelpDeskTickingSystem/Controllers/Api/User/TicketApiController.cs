@@ -38,6 +38,20 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         return Ok(PaginateResponse<Ticket>.Create(paginatedTickets));
     }
     
+    [HttpPost]
+    public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto newTicket)
+    {
+        try
+        {
+            await ticketRepository.CreateTicketAsync(newTicket.RequesterId, newTicket.Title, newTicket.Description, newTicket.CategoryId, newTicket.Priority);
+            return Ok(ApiResponse<string>.Ok("Ticket created successfully."));
+        }
+        catch (Exception)
+        {
+            return BadRequest(ApiResponse<string>.Error("Failed to create ticket"));
+        }
+    }
+    
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTicket([FromRoute] int id, [FromBody] ViewTicketDto updatedTicket)
     {

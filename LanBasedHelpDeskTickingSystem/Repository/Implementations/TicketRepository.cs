@@ -2,6 +2,7 @@
 using LanBasedHelpDeskTickingSystem.Entities.Models;
 using LanBasedHelpDeskTickingSystem.Libs;
 using LanBasedHelpDeskTickingSystem.Repository.Interfaces;
+using LanBasedHelpDeskTickingSystem.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LanBasedHelpDeskTickingSystem.Repository.Implementations;
@@ -25,6 +26,35 @@ public class TicketRepository(AppDbContext db) : ITicketRepository
             .ToListAsync();
     }
 
+    public async Task CreateTicketAsync(int userId, string title, string description, int categoryId, string priority)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var ticket = new Ticket
+            {
+                TicketNumber = TicketNumberGenerator.GenerateTicketNumber(),
+                Title = title,
+                Description = description,
+                CategoryId = categoryId,
+                Priority = priority,
+                RequesterId = userId,
+                Status = "open",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await db.SetEntity<Ticket>().AddAsync(ticket);
+            await db.SaveChangesAsync();
+            
+            await transaction.CommitAsync();
+        }
+        catch (DbUpdateException e)
+        {
+            await transaction.RollbackAsync();
+            Console.WriteLine(e.InnerException.Message);
+        }
+    }
     public async Task UpdateTicketAdminNoteAsync(int ticketId, string status, string note)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();

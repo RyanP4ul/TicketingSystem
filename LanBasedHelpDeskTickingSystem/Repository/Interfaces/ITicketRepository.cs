@@ -10,6 +10,7 @@ public interface ITicketRepository
     // public Task<PaginatedList<Ticket>> GetPaginatedTickets(int page, int limit);
     public Task<Ticket?> GetTicketByIdAsync(int ticketId);
     public Task<IEnumerable<Ticket>> GetRecentTicketsAsync(int limit);
+    public Task CreateTicketAsync(int requesterId, string title, string description, int categoryId, string priority);
     public Task UpdateTicketAdminNoteAsync(int ticketId, string status, string note);
     public Task UpdateTicketAsync(int ticketId, string description, int categoryId, string priority);
     public Task DeleteTicketAsync(int ticketId);

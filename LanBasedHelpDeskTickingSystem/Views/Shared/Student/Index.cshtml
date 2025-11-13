@@ -97,12 +97,57 @@
                 }
             </div>
 
-            <!-- Ticket Categories -->
             <div class="bg-white rounded-xl shadow p-4">
-                <h2 class="font-semibold text-gray-800 mb-4">Ticket Category</h2>
+                <h2 class="font-semibold text-gray-800 mb-4">Quick Actions</h2>
 
                 <div class="space-y-4">
-                    TICKETS
+                    <div class="space-y-3 w-full max-w-sm">
+                        <!-- Submit New Ticket -->
+                        <a asp-area="User" asp-controller="Ticket" asp-action="Index"
+                           class="flex items-center justify-between border border-gray-200 rounded-xl bg-white px-5 py-4 hover:shadow-md transition">
+                          <div class="flex items-center space-x-4">
+                            <div class="bg-blue-600 p-2 rounded-lg">
+                              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" 
+                                   viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                      d="M12 4v16m8-8H4" />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3 class="text-base font-semibold text-gray-900">Submit new ticket</h3>
+                              <p class="text-sm text-gray-500">Report an issue or request help</p>
+                            </div>
+                          </div>
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                               viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                  d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                    
+                        <!-- Browse Help Articles -->
+                        <a asp-area="User" asp-controller="KnowledgeBase" asp-action="Index"
+                           class="flex items-center justify-between border border-gray-200 rounded-xl bg-white px-5 py-4 hover:shadow-md transition">
+                          <div class="flex items-center space-x-4">
+                            <div class="bg-green-500 p-2 rounded-lg">
+                              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" 
+                                   viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                      d="M12 4v16m8-8H4" />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3 class="text-base font-semibold text-gray-900">Browse Help Articles</h3>
+                              <p class="text-sm text-gray-500">Find solutions in our knowledge base</p>
+                            </div>
+                          </div>
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                               viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                  d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      </div>
                 </div>
             </div>
         </div>

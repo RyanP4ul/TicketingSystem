@@ -78,6 +78,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFN0dWRlbnRcVGlja2V0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Project/LanBasedHelpDeskTickingSystem/LanBasedHelpDeskTickingSystem/Views/Shared/Student/Ticket/NewTicket.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFN0dWRlbnRcVGlja2V0XE5ld1RpY2tldC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Project/LanBasedHelpDeskTickingSystem/LanBasedHelpDeskTickingSystem/Views/Shared/Student/Ticket/ViewTicket.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXFN0dWRlbnRcVGlja2V0XFZpZXdUaWNrZXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

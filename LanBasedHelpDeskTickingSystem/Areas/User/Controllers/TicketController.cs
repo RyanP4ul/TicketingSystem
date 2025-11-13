@@ -21,6 +21,19 @@ public class TicketController (IUserRepository userRepository, ICategoryReposito
         return View("Student/Ticket/Index");
     }
 
+    [HttpGet("New")]
+    public async Task<IActionResult> NewTicket()
+    {
+        var categories = await categoryRepository.GetAllCategoriesAsync();
+        var userId = Convert.ToInt32(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "");
+        
+        return View("Student/Ticket/NewTicket", new NewTicketViewModel
+        {
+            UserId = userId,
+            Categories = categories
+        });
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> ViewTicket(int id)
     {
