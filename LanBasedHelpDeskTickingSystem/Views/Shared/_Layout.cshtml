@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - TickingSystem</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 font-sans">
+
+<style>
+    /* 1. Reset the specific class that is causing issues */
+    .apexcharts-legend-text {
+        /* Force the element to be visible */
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        
+        /* Force a standard color (Dark Gray) so it stands out against the background */
+        color: #374151 !important; 
+        fill: #374151 !important;
+        
+        /* Reset margins in case they are pushing text off screen */
+        margin-left: 5px !important;
+    }
+
+    /* 2. Optional: Ensure it looks good in Dark Mode (Flowbite) */
+    .dark .apexcharts-legend-text {
+        color: #9CA3AF !important; /* Light Gray */
+        fill: #9CA3AF !important;
+    }
+</style>
+
+<header>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Component.InvokeAsync("Header")
+    }
+</header>
+
+@RenderBody()
+
+<script src="~/js/flowbite/flowbite.min.js" asp-append-version="true"></script>
+<script src="~/js/apexcharts/apexcharts.min.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const totalOpenTickets = document.getElementById("total-open-tickets");
+        if (totalOpenTickets) {
+            fetch('/api/admin/tickets/total')
+                .then(response => response.json())
+                .then(res => {
+                    totalOpenTickets.textContent = res.data;
+                })
+                .catch(error => {
+                    totalOpenTickets.textContent = "0";
+                });
+        }
+    });
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,317 @@
+﻿@using LanBasedHelpDeskTickingSystem.Utils
+@model LanBasedHelpDeskTickingSystem.Entities.Views.AdminViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<style>
+    /* Target the specific chart ID to win the "Specificity War" */
+    #donut-chart .apexcharts-legend-text {
+        color: #000000 !important; 
+        fill: #000000 !important;
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 14px !important;   
+        font-weight: 400 !important;    
+        position: relative !important; 
+        margin-left: 5px !important;
+    }
+</style>
+
+<div class="p-4 sm:ml-64">
+    <div class="mt-14">
+        
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+                <p class="text-base font-normal text-gray-500 dark:text-gray-400">Manage tickets and monitor help desk activity</p>
+            </div>
+            <div>
+                <a asp-area="Admin" asp-controller="Ticket" asp-action="Index" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <svg class="inline w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                    </svg>
+                    Manage Tickets
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5h6M9 9h6m-6 4h6M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-4">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Tickets</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">@Model.TotalTickets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100 dark:bg-yellow-900">
+                            <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Zm1-12h-2v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-4">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">@Model.PendingTickets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 1m0 0a2.25 2.25 0 0 0 0 4.5M4 1m0 0a2.25 2.25 0 0 1 0 4.5m12 7.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M16 1m0 0a2.25 2.25 0 0 0 0 4.5M16 1m0 0a2.25 2.25 0 0 1 0 4.5M10 4.25V1m0 3.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 1m0 0a2.25 2.25 0 0 0 0 4.5M10 1m0 0a2.25 2.25 0 0 1 0 4.5m0 11.25V13m0 3.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 13m0 0a2.25 2.25 0 0 0 0 4.5M10 13m0 0a2.25 2.25 0 0 1 0 4.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-4">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">In Progress</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">@Model.InProgressTickets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900">
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-4">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Resolved</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">@Model.ResolvedTickets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-red-100 dark:bg-red-900">
+                            <svg class="w-6 h-6 text-red-600 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16M1 7h16M1 13h16"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-4">
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Closed</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">@Model.ClosedTickets</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Tickets per Day (Last 7 Days)</h5>
+                <div id="bar-chart"></div>
+            </div>
+
+            <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Ticket Category</h5>
+                <div id="donut-chart" class="flex justify-center"></div>
+            </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
+                <h5 class="text-xl font-bold text-gray-900 dark:text-white">Recent Tickets</h5>
+                <a asp-area="Admin" asp-controller="Ticket" asp-action="Index" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">View All</a>
+            </div>
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Ticket Subject</th>
+                        <th scope="col" class="px-6 py-3">Requester</th>
+                        <th scope="col" class="px-6 py-3">Date</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                @ticket.Title
+                                <p class="text-xs font-normal text-gray-500 dark:text-gray-400">@ticket.Description</p>
+                            </th>
+                            <td class="px-6 py-4">@ticket.Requester?.Email</td>
+                            <td class="px-6 py-4">@ticket.CreatedAt</td>
+                            <td class="px-6 py-4">@Html.Raw(BadgeHelper.GetStatusBadge(ticket.Status))</td>
+                            <td class="px-6 py-4">
+                                <a asp-area="Admin" asp-controller="Ticket" asp-action="Ticket" asp-route-id="@ticket.Id" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        @await Html.PartialAsync("_Footer")
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            const getChartTextColor = () => {
+                        return localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                            ? '#5e5e5e' // 5e5e5e
+                            : '#374151';
+                    };
+            
+                    const barChartOptions = {
+                        series: [{
+                            name: 'Tickets',
+                            data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.TicketsPerDay)) // [5, 8, 3, 10, 6, 4, 9]
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '55%',
+                                endingShape: 'rounded',
+                                borderRadius: 4,
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ['transparent']
+                        },
+                        xaxis: {
+                            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            labels: {
+                                style: {
+                                    colors: getChartTextColor()
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'No. of Tickets',
+                                style: {
+                                    color: getChartTextColor()
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: getChartTextColor()
+                                }
+                            }
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            theme: 'dark'
+                        },
+                        grid: {
+                            borderColor: '#4B5563'
+                        },
+                        colors: ['#2563EB']
+                    };
+            
+                    const donutChartOptions = {
+                        series: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PopularCategories.Values)), //[156, 156],
+                        labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.PopularCategories.Keys)),
+                        chart: {
+                            type: 'donut',
+                            height: 350,
+							redrawOnParentResize: true
+                        },
+                        colors: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#F43F5E'],
+
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200
+                                },
+                                legend: {
+                                    position: 'bottom',
+									show: true
+                                }
+                            }
+                        }],
+						legend: {
+							show: true,
+							showForSingleSeries: true,
+							position: 'bottom',
+							labels: {
+								colors: '#000000',
+								useSeriesColors: false
+							}
+						},
+						plotOptions: {
+						  pie: {
+							donut: {
+							  labels: {
+								show: true
+							  }
+							},
+							expandOnClick: false
+						  }
+						},
+                        tooltip: {
+                            enabled: true,
+                            custom: function({ series, seriesIndex, w }) {
+                                const value = series[seriesIndex];
+                                const label = w.config.labels[seriesIndex];
+                                const total = series.reduce((a, b) => a + b, 0);
+                                const percent = (value / total * 100).toFixed(2);
+                    
+                                return `
+                                    <div class="px-3 py-2 bg-white border shadow-md rounded-md dark:bg-gray-700 dark:border-gray-600">
+                                        <span class="font-bold">${label}:</span>
+                                        <span>${value} (${percent}%)</span>
+                                    </div>
+                                `;
+                            }
+                        }
+                    };
+            
+                    const barChartEl = document.getElementById('bar-chart');
+                    if (barChartEl) {
+                        const barChart = new ApexCharts(barChartEl, barChartOptions);
+                        barChart.render();
+                    }
+            
+                    const donutChartEl = document.getElementById('donut-chart');
+                    if (donutChartEl) {
+                        const donutChart = new ApexCharts(donutChartEl, donutChartOptions);
+                        donutChart.render();
+                    }
+                    
+        });
+    </script>
+}
