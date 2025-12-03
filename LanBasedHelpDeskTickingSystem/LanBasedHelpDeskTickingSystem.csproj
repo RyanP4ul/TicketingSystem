@@ -16,7 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\" />
+      <Folder Include="Areas\Technician\" />
+      <Folder Include="Views\Shared\Technician\" />
     </ItemGroup>
 
     <ItemGroup>

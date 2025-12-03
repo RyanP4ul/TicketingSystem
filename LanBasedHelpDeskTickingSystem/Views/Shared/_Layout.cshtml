@@ -6,28 +6,24 @@
     <title>@ViewData["Title"] - TickingSystem</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <script src="~/js/notification.js" asp-append-version="true"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans">
 
 <style>
-    /* 1. Reset the specific class that is causing issues */
     .apexcharts-legend-text {
-        /* Force the element to be visible */
         display: inline-block !important;
         visibility: visible !important;
         opacity: 1 !important;
         
-        /* Force a standard color (Dark Gray) so it stands out against the background */
         color: #374151 !important; 
         fill: #374151 !important;
         
-        /* Reset margins in case they are pushing text off screen */
         margin-left: 5px !important;
     }
 
-    /* 2. Optional: Ensure it looks good in Dark Mode (Flowbite) */
     .dark .apexcharts-legend-text {
-        color: #9CA3AF !important; /* Light Gray */
+        color: #9CA3AF !important;
         fill: #9CA3AF !important;
     }
 </style>

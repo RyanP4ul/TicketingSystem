@@ -30,6 +30,20 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         #endregion
         
+        modelBuilder.Entity<Comment>().ToTable("comments");
+        
+        modelBuilder.Entity<Comment>()
+            .HasOne(t => t.Ticket)
+            .WithMany()
+            .HasForeignKey(t => t.TicketId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Comment>()
+            .HasOne(t => t.User)
+            .WithMany()
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         modelBuilder.Entity<User>()
             .ToTable("users")
             .HasIndex(u => u.Username)
@@ -42,24 +56,35 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(t => t.TicketId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Notification>().ToTable("notifications");
+        
+        modelBuilder.Entity<Notification>()
+            .HasOne(t => t.Ticket)
+            .WithMany()
+            .HasForeignKey(t => t.TicketId)
+            .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Notification>()
+            .HasOne(t => t.User)
+            .WithMany()
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         modelBuilder.Entity<Ticket>().ToTable("tickets");
 
-        // Requester → Tickets
         modelBuilder.Entity<Ticket>()
             .HasOne(t => t.Requester)
             .WithMany()
             .HasForeignKey(t => t.RequesterId)
             .OnDelete(DeleteBehavior.Cascade);
         
-        // Assigned Technician → Tickets
         modelBuilder.Entity<Ticket>()
             .HasOne(t => t.Assigned)
             .WithMany()
             .HasForeignKey(t => t.AssignedId)
             .OnDelete(DeleteBehavior.Cascade);
         
-        // Category → Tickets
         modelBuilder.Entity<Ticket>()
             .HasOne(t => t.Category)
             .WithMany()

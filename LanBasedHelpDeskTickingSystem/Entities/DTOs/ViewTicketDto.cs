@@ -15,9 +15,6 @@ public class ViewTicketDto
     public int CategoryId { get; set; }
     
     [Required]
-    public string Priority { get; set; }
-    
-    [Required]
     public string Room { get; set; }
 
     public List<IFormFile> Files { get; set; } = new();

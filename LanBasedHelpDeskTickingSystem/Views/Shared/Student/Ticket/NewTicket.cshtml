@@ -1,4 +1,5 @@
 ﻿@using LanBasedHelpDeskTickingSystem.Entities.Models
+@using LanBasedHelpDeskTickingSystem.Data
 @model LanBasedHelpDeskTickingSystem.Entities.DTOs.ViewTicketDto
 @{
     ViewData["Title"] = "New Ticket";
@@ -23,6 +24,23 @@
 
                 <div class="lg:col-span-2 space-y-6">
 
+                    <div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                      
+                        <div class="bg-gradient-to-r from-blue-50 to-white border-b border-gray-100 px-4 py-3 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+                                </svg>
+                                <span class="text-sm font-bold text-gray-800">Suggested Solutions</span>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">AI Powered</span>
+                        </div>
+                    
+                        <div id="suggestion-lists" class="flex flex-col divide-y divide-gray-50">
+                        </div>
+                    
+                    </div>
+                    
                     <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Ticket Details</h2>
                         <div class="space-y-4">
@@ -55,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <button id="new-ticket-button" type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -80,16 +98,28 @@
                                 </select>
                                 <p id="error-categoryid" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
                             </div>
-
+                            
                             <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-900">Priority</label>
-                                <select asp-for="Priority" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
-                                    <option value="low" selected>Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
+                                <label for="Room" class="block mb-2 text-sm font-medium text-gray-900">Room / Location</label>
+                                <select asp-for="Room" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                                    <option value="none" selected>None</option>
+                                    @foreach (var room in Rooms.RoomList)
+                                    {
+                                        <option value="@room">@room</option>
+                                    }
                                 </select>
-                                <p id="error-priority" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+                                <p class="text-gray-500 text-xs mt-1">Optional</p>
                             </div>
+
+                            @* <div> *@
+                            @*     <label class="block mb-2 text-sm font-medium text-gray-900">Priority</label> *@
+                            @*     <select asp-for="Priority" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"> *@
+                            @*         <option value="low" selected>Low</option> *@
+                            @*         <option value="medium">Medium</option> *@
+                            @*         <option value="high">High</option> *@
+                            @*     </select> *@
+                            @*     <p id="error-priority" class="mt-2 text-sm text-red-600 dark:text-red-500"></p> *@
+                            @* </div> *@
                         </div>
                     </div>
 
@@ -102,7 +132,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500">SVG, PNG, JPG (MAX. 5MB)</p>
+                                    <p class="text-xs text-gray-500">PNG, JPG (MAX. 5MB)</p>
                                 </div>
                                 <input asp-for="Files" type="file" class="hidden" multiple accept=".jpg,.jpeg,.png"/>
                             </label>
@@ -114,10 +144,112 @@
                 </div>
             </div>
         </form>
+        
     </div>
 </div>
+
+@await Html.PartialAsync("_AiChatSupport")
 
 @section Scripts {
     <script src="~/js/libs/toast.js" asp-append-version="true"></script>
     <script src="~/js/user/new-ticket.js" asp-append-version="true"></script>
+    <script src="~/js/ai-chat-support.js" asp-append-version="true"></script>
+    <script>
+        function getMatchColor(score) {
+            if (score >= 85) return 'bg-green-100 text-green-700 border-green-200';
+            if (score >= 50) return 'bg-amber-100 text-amber-700 border-amber-200';
+            return 'bg-gray-100 text-gray-600 border-gray-200';
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const titleInput = document.getElementById('Title');
+            const descInput = document.getElementById('Description');
+            const suggestionContainer = document.getElementById('suggestion-lists');
+            const DEBOUNCE_DELAY = 1500;
+            
+            let currentController = null;
+            let debounceTimer = null;
+
+            async function fetchAiSuggestions() {
+                const title = titleInput.value.trim();
+                const description = descInput.value.trim();
+
+                if (title.length < 3 && description.length < 3) {
+                    suggestionContainer.innerHTML = '';
+                    return;
+                }
+
+                suggestionContainer.innerHTML = `
+                    <div class="p-4 text-center text-gray-400 text-xs animate-pulse">
+                        ✨ Analyzing your issue...
+                    </div>
+                `;
+
+                if (currentController) currentController.abort();
+                
+                currentController = new AbortController();
+                const signal = currentController.signal;
+
+                try {
+ 
+                    const response = await fetch('/api/ai/suggestion', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description }),
+                        // body : {
+                        //     title: 'Cannot connect to Wi-Fi',
+                        //     description: 'I have been trying to connect to the campus Wi-Fi but keep getting an error message saying "Unable to connect". I have restarted my device and tried multiple times, but the issue persists. Please help!'     
+                        // },
+                        signal: signal
+                    });
+
+                    if (!response.ok) throw new Error("API Error");
+
+                    const data = await response.json();
+                    
+                    suggestionContainer.innerHTML = "";
+
+                    if (data.answer.length === 0) {
+                        suggestionContainer.innerHTML = `<div class="p-3 text-xs text-gray-400 text-center">No similar articles found.</div>`;
+                        return;
+                    }
+
+                    data.answer.forEach(suggestion => {
+                        const item = document.createElement('div');
+                        item.className = 'p-3 hover:bg-blue-50 transition-colors duration-200 cursor-pointer group';
+                        item.innerHTML = `
+                            <div class="flex justify-between items-start gap-2">
+                                <a href="/User/KnowledgeBase/${suggestion.id}" target="_blank" class="block w-full">
+                                    <h5 class="text-sm font-semibold text-blue-600 group-hover:underline">${suggestion.title}</h5>
+                                    <p class="text-xs text-gray-500 mt-1 line-clamp-2">${suggestion.snippet}</p>
+                                </a>
+                                <div class="flex-shrink-0 border ${getMatchColor(suggestion.match_score)} text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                    ${suggestion.match_score}% Match
+                                </div>
+                            </div>
+                        `;
+                        suggestionContainer.appendChild(item);
+                    });
+
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        console.log('Previous request cancelled - User kept typing');
+                    } else {
+                        console.error('Fetch error:', error);
+                        suggestionContainer.innerHTML = `<div class="p-3 text-xs text-red-400 text-center">Unable to load suggestions.</div>`;
+                    }
+                }
+            }
+
+            function onInputChanged() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    fetchAiSuggestions();
+                }, DEBOUNCE_DELAY);
+            }
+
+            if(titleInput) titleInput.addEventListener('input', onInputChanged);
+            if(descInput) descInput.addEventListener('input', onInputChanged);
+        });
+    </script>
 }

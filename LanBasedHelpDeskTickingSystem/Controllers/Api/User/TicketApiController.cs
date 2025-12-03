@@ -35,6 +35,8 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         if (!string.IsNullOrEmpty(category)) query = query.Where(t => t.Category != null && t.Category.Name == category);
         if (!string.IsNullOrEmpty(priority)) query = query.Where(t => t.Priority == priority);
 
+        query = query.Where(x => !x.IsDeleted);
+
         var ticketsQuery = query.Include(x => x.Requester).Include(x => x.Attachments).Select(x => new
         {
             x.Id,
@@ -79,7 +81,7 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         }
         
         var userId = Convert.ToInt32(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "");
-        var response = await ticketRepository.CreateTicketAsync(userId, newTicket.Title, newTicket.Description, newTicket.CategoryId, newTicket.Priority, newTicket.Files);
+        var response = await ticketRepository.CreateTicketAsync(userId, newTicket.Title, newTicket.Description, newTicket.CategoryId, newTicket.Room, newTicket.Files);
         
         if (!response.Success) return BadRequest(response);
 
@@ -103,7 +105,7 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         
         try
         {
-            var response = await ticketRepository.UpdateTicketByUserAsync(id, updatedTicket.Title, updatedTicket.Description, updatedTicket.CategoryId, updatedTicket.Priority, updatedTicket.Files);
+            var response = await ticketRepository.UpdateTicketByUserAsync(id, updatedTicket.Title, updatedTicket.Description, updatedTicket.CategoryId, updatedTicket.Room, updatedTicket.Files);
             
             if (!response.Success) return BadRequest(response);
             

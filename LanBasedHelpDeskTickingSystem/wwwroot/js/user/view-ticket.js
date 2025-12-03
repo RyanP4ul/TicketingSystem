@@ -1,5 +1,6 @@
 ﻿'use strict'
 
+let allFiles = [];
 const API_URL = "/api/user/tickets";
 const elements = {};
 let ticketId = -1;
@@ -12,8 +13,10 @@ function cacheElements() {
     elements.zoomedImg = document.getElementById("zoomed-image");
     
     elements.form = document.getElementById("form");
-    
-    elements.removeAttachment = document.getElementById("remove-attachment");
+
+    elements.removeAttachments = document.querySelectorAll("#remove-attachment");
+    elements.fileInput = document.getElementById('Files');
+    elements.fileListContainer = document.getElementById('file-list-container');
 }
 
 function openZoom(element) {
@@ -109,10 +112,9 @@ async function handleDeleteClick() {
     }
 }
 
-async function handleRemoveAttachment() {
-    
+async function handleRemoveAttachment(e) {
     const ticketId = elements.form.dataset.id || -1;
-    const attachmentId = elements.removeAttachment.dataset.id;
+    const attachmentId = e.target.dataset.id;
 
     const response = await fetch(`${API_URL}/attachment`, {
         method: "POST",
@@ -125,7 +127,7 @@ async function handleRemoveAttachment() {
     });
 
     if (response.ok) {
-        elements.removeAttachment.parentElement.remove();
+        e.target.parentElement.remove();
 
         showToast({
             message: "Attachment removed successfully.",
@@ -135,12 +137,78 @@ async function handleRemoveAttachment() {
     }
 }
 
+const handleFileInputChange = (e) => {
+    const newFiles = Array.from(elements.fileInput.files);
+    const maxFileSize = 5 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/png'];
+
+    newFiles.forEach(file => {
+
+        if (!allowedTypes.includes(file.type)) {
+            showToast({
+                message: `Skipped "${file.name}": Invalid Type.`,
+                type: "danger",
+                duration: 3000
+            });
+            return;
+        }
+
+        if (file.size > maxFileSize) {
+            showToast({
+                message: `Skipped "${file.name}": Too big.`,
+                type: "danger",
+                duration: 3000
+            });
+            return;
+        }
+
+        const exists = allFiles.some(f => f.name === file.name && f.size === file.size);
+
+        if (!exists) {
+            allFiles.push(file);
+        }
+    });
+
+    renderFileList();
+}
+
+function renderFileList() {
+    elements.fileListContainer.innerHTML = '';
+    
+    allFiles.forEach((file, index) => {
+        const imgUrl = URL.createObjectURL(file);
+
+        const li = document.createElement('li');
+        li.className = "flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg shadow-sm";
+        li.innerHTML = `
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <img src="${imgUrl}" class="h-10 w-10 object-cover rounded" />
+                        <div class="flex flex-col min-w-0">
+                            <span class="text-sm font-medium text-gray-900 truncate block max-w-xs">${file.name}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeFile(${index})" class="text-gray-400 hover:text-red-600 transition p-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                `;
+        elements.fileListContainer.appendChild(li);
+
+
+    });
+}
+
+window.removeFile = function(index) {
+    allFiles.splice(index, 1);
+    renderFileList();
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     cacheElements();
 
     ticketId = elements.form.dataset.id || -1;
     
+    elements.removeAttachments.forEach(btn => btn.addEventListener("click", handleRemoveAttachment));
     elements.updateTicketBtn.addEventListener("click", handleFormSubmit);
     elements.confirmBtn.addEventListener("click", handleDeleteClick);
-    elements.removeAttachment.addEventListener("click", handleRemoveAttachment);
+    elements.fileInput.addEventListener("change", handleFileInputChange);
 });

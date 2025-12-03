@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LanBasedHelpDeskTickingSystem.Services;
 
+[ApiController]
 [Route("api/auth")]
 public class AuthApiController(IUserService userService, IUserRepository userRepository, IJwtService jwtService) : ControllerBase
 {

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LanBasedHelpDeskTickingSystem")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84b47edd57af39042de150e9ccd5528b719bda70")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a91f20a432c8a1aeac984d02e69f9152ad08bf1")]
 [assembly: System.Reflection.AssemblyProductAttribute("LanBasedHelpDeskTickingSystem")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LanBasedHelpDeskTickingSystem")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

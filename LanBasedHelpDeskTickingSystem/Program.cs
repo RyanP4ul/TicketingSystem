@@ -49,6 +49,8 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IArchiveRepository, ArchiveRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<INotifyRepository, NotifyRepository>();
 
 // MVC controllers + views
 builder.Services.AddControllersWithViews();
@@ -82,6 +84,15 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+// builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+//         // Lockout settings
+//         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Lock for 5 mins
+//         options.Lockout.MaxFailedAccessAttempts = 5; // Max 5 tries
+//         options.Lockout.AllowedForNewUsers = true; // Apply to new users immediately
+//     })
+//     .AddEntityFrameworkStores<ApplicationDbContext>()
+//     .AddDefaultTokenProviders();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // for API calls
@@ -102,12 +113,9 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = signingKey,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(2),
-
-            // Map "roles" claim to ClaimsIdentity.RoleClaimType so Authorize(Roles=...) works
             RoleClaimType = ClaimTypes.Role
         };
         
-        // Read JWT from cookie if available
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
@@ -123,7 +131,7 @@ builder.Services.AddAuthentication(options =>
     .AddCookie(IdentityConstants.ExternalScheme, options =>
     {
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.Lax; // Lax is required for OAuth
+        options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; 
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
     })
@@ -140,13 +148,6 @@ builder.Services.AddAuthentication(options =>
         options.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
-// builder.Services.Configure<CookiePolicyOptions>(options =>
-// {
-//     options.CheckConsentNeeded = context => false; //  FIX 1A
-//     options.MinimumSameSitePolicy = SameSiteMode.Lax; //  FIX 1B
-// });
-
-
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -157,19 +158,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// app.UseCookiePolicy(); //  FIX 2
+app.UseCookiePolicy(); //  FIX 2
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseRateLimiter();
 app.MapControllers();
-// app.MapRazorPages();
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

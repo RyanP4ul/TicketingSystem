@@ -36,4 +36,5 @@ public class KnowledgeBaseController(AppDbContext db, ICategoryRepository catego
         
         return View("Student/KnowledgeBase/ViewKb", article);
     }
+    
 }

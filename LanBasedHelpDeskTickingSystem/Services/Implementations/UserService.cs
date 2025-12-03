@@ -44,14 +44,41 @@ public class UserService(AppDbContext db, IPasswordHasher<User> hasher) : IUserS
 
     public async Task<User?> AuthenticateAsync(string usernameOrEmail, string password)
     {
-        var user = await db.SetEntity<User>()
-            .Where(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail)
-            .FirstOrDefaultAsync();
+        await using var transaction = await db.Database.BeginTransactionAsync();
+        try
+        {
+            var user = await db.SetEntity<User>()
+                .Where(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail)
+                .FirstOrDefaultAsync();
 
-        if (user == null) return null;
+            if (user == null) return null;
 
-        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
-        return result == PasswordVerificationResult.Success ? user : null;
+            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+
+            if (result != PasswordVerificationResult.Success) return null;
+            
+            user.LastLogin = DateTime.UtcNow;
+
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
+            
+            return user;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            return null;
+        }
+        
+        // var user = await db.SetEntity<User>()
+        //     .Where(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail)
+        //     .FirstOrDefaultAsync();
+        //
+        // if (user == null) return null;
+        //
+        // var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+        //
+        // return result == PasswordVerificationResult.Success ? user : null;
     }
 
     public async Task<User?> GetByIdAsync(int id) => await db.SetEntity<User>().FindAsync(id);

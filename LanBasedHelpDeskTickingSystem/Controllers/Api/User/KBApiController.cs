@@ -29,7 +29,7 @@ public class KBApiController(AppDbContext db) : ControllerBase
         if (!string.IsNullOrEmpty(search)) query = query.Where(t => t.Title.Contains(search));
         if (!string.IsNullOrEmpty(category)) query = query.Where(t => t.Category != null && t.Category.Name == category);
         
-        var kbQuery = query.OrderBy(t => t.Id);
+        var kbQuery = query.Where(x => !x.IsDeleted).OrderBy(t => t.Id);
         var paginatedKbs = await PaginatedList<KnowledgeBase>.CreateAsync(kbQuery, page, limit);
         
         return Ok(PaginateResponse<KnowledgeBase>.Create(paginatedKbs));

@@ -44,4 +44,8 @@ public class User
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    [Column("last_login_at")]
+    public DateTime LastLogin { get; set; } = DateTime.UtcNow;
+    
 }

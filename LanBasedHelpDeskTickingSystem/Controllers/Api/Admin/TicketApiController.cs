@@ -48,10 +48,8 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
     [HttpPut]
     public async Task<IActionResult> UpdateTicket([FromBody] AdminTicketUpdateViewModel model)
     {
-        
-        
         var userId = Convert.ToInt32(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "");
-        var response = await ticketRepository.UpdateTicketByAdminAsync(userId, model.ticketId, model.assigned, model.status, model.notes);
+        var response = await ticketRepository.UpdateTicketByAdminAsync(userId, model.ticketId, model.assigned, model.status, model.priority, model.notes);
         
         if (!response.Success) return BadRequest(response);
         

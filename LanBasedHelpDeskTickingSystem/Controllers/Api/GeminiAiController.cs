@@ -22,4 +22,17 @@ public class GeminiAiController(IAiSupportService aiService) : ControllerBase
         return Ok(new { answer });
     }
     
+    [HttpPost]
+    [Route("api/ai/suggestion")]
+    public async Task<IActionResult> GetSupportAnswerWithContext([FromBody] AiTicketSuggestionDto dto)
+    {
+        if (string.IsNullOrEmpty(dto.title) || string.IsNullOrEmpty(dto.description))
+        {
+            return BadRequest(new { error = "Title and Description cannot be empty." });
+        }
+        
+        var answer = await aiService.GetTicketSuggestionsAsync(dto.title, dto.description);
+        return Ok(new { answer });
+    }
+    
 }

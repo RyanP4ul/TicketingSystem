@@ -67,14 +67,14 @@
                 <div class="relative overflow-x-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Ticket Subject</th>
-                                <th scope="col" class="px-6 py-3">Status</th>
-                                <th scope="col" class="px-6 py-3">Category</th>
-                                <th scope="col" class="px-6 py-3">Priority</th>
-                                <th scope="col" class="px-6 py-3">Date</th>
-                                <th scope="col" class="px-6 py-3">Action</th>
-                            </tr>
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Ticket Subject</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">Category</th>
+                            <th scope="col" class="px-6 py-3">Priority</th>
+                            <th scope="col" class="px-6 py-3">Date</th>
+                            <th scope="col" class="px-6 py-3">Action</th>
+                        </tr>
                         </thead>
                         <tbody id="listContainer"></tbody>
                     </table>
@@ -86,10 +86,13 @@
             </div>
         </div>
     </div>
+    
+    @await Html.PartialAsync("_AiChatSupport")
 
 @section Scripts
 {
     <script src="~/js/libs/utils.js"></script>
     <script src="~/js/libs/pagination.js"></script>
     <script src="~/js/user/tickets.js"></script>
+    <script src="~/js/ai-chat-support.js" asp-append-version="true"></script>
 }

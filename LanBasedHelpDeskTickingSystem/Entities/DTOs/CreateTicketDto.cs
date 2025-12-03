@@ -15,7 +15,7 @@ public class CreateTicketDto
     public int CategoryId { get; set; }
     
     [Required]
-    public string Priority { get; set; }
+    public string Room { get; set; }
     
-    public List<IFormFile> Files { get; set; }
+    public List<IFormFile> Files { get; set; } = new();
 }

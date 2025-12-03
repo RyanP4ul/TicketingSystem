@@ -23,12 +23,15 @@ public class Ticket
     public required string Description { get; set; }
     
     [Required]
+    [Column("room")]
+    public required string Room { get; set; }
+    
+    [Required]
     [Column("status")]
     public string Status { get; set; }
     
-    [Required]
     [Column("priority")]
-    public required string Priority { get; set; }
+    public string Priority { get; set; }
     
     [Required]
     [Column("category_id")]

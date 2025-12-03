@@ -34,6 +34,15 @@ public class KnowledgeBaseRepository(AppDbContext db) : IKnowledgeBaseRepository
         return await db.SetEntity<KnowledgeBase>().Include(x => x.Category).FirstOrDefaultAsync(kb => kb.Id == id && !kb.IsDeleted);
     }
     
+    public async Task<IEnumerable<KnowledgeBase>> GetPopularArticlesAsync()
+    {
+        return await db.SetEntity<KnowledgeBase>()
+            .Where(kb => kb.IsPublished && !kb.IsDeleted)
+            .OrderByDescending(kb => kb.ViewCount)
+            .Take(5)
+            .ToListAsync();
+    }
+    
     public async Task<ApiResultResponse> InsertArticleAsync(string title, string content, int categoryId, int authorId, string tags)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();

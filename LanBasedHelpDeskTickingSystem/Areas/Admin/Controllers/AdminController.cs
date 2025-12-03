@@ -21,7 +21,7 @@ public class AdminController(IAdminDashboardRepository adminDashboardRepository,
         var perDay = await ticketRepository.GetTicketPerDay();
         var popularCategories = await ticketRepository.GetTicketCategoryPopularityAsync();
         
-        return View(new AdminViewModel
+        return View("Admin/Index", new AdminViewModel
         {
             Categories = categories,
             Tickets = recentTickets,

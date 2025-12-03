@@ -8,25 +8,29 @@ public class Notification
         [Key]
         [Required]
         [Column("id")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
+        
+        [Required]
+        [Column("ticket_id")]
+        public int TicketId { get; set; }
     
-        [Required, MaxLength(200)]
-        [Column("title")]
-        public required string Title { get; set; }
+        [Required]
+        [Column("user_id")]
+        public int UserId { get; set; }
         
         [Required]
         [Column("message")]
-        public required string Message { get; set; }
-        
-        [Required]
-        [Column("type")]
-        public required string Type { get; set; }
+        public string message { get; set; }
         
         [Required]
         [Column("is_read")]
-        public required bool IsRead { get; set; }
+        public bool IsRead { get; set; }
         
         [Required]
         [Column("created_at")]
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public Ticket? Ticket;
+        public User? User;
+
 }

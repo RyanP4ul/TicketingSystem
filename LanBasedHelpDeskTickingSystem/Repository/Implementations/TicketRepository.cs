@@ -4,12 +4,13 @@ using LanBasedHelpDeskTickingSystem.Entities.Models;
 using LanBasedHelpDeskTickingSystem.Entities.Responses;
 using LanBasedHelpDeskTickingSystem.Libs;
 using LanBasedHelpDeskTickingSystem.Repository.Interfaces;
+using LanBasedHelpDeskTickingSystem.Services.Interfaces;
 using LanBasedHelpDeskTickingSystem.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LanBasedHelpDeskTickingSystem.Repository.Implementations;
 
-public class TicketRepository(AppDbContext db, IFileRepository fileRepository) : ITicketRepository
+public class TicketRepository(AppDbContext db, INotifyRepository notifyRepository, IFileRepository fileRepository, IAiSupportService aiSupportService) : ITicketRepository
 {
     public async Task<Ticket?> GetTicketByIdAsync(int ticketId)
     {
@@ -22,7 +23,7 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
 
     public async Task<int> GetTotalTicketsByStatusAsync()
     {
-        return await db.SetEntity<Ticket>().CountAsync(x => x.Status == "open");
+        return await db.SetEntity<Ticket>().CountAsync(x => x.Status == "open" && !x.IsDeleted);
     }
 
     public async Task<int[]> GetTicketPerDay()
@@ -91,27 +92,36 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
             .ToListAsync();
     }
 
-    public async Task<ApiResultResponse> CreateTicketAsync(int userId, string title, string description, int categoryId,
-        string priority, List<IFormFile> files)
+    public async Task<ApiResultResponse> CreateTicketAsync(int userId, string title, string description, int categoryId, string room, List<IFormFile> files)
     {
         if (files.Count > 5)
         {
             return ApiResultResponse.Error("You can upload a maximum of 5 files");
+        }
+        
+        var isRelevant = await aiSupportService.IsTicketRelevantAsync(title, description);
+        
+        if (!isRelevant)
+        {
+            return ApiResultResponse.Error("The ticket content is not relevant!");
         }
 
         await using var transaction = await db.Database.BeginTransactionAsync();
 
         try
         {
+            var priority = await aiSupportService.AnalyzeTicketPriorityAsync(title, description);
+            
             var ticket = new Ticket
             {
                 TicketNumber = TicketNumberGenerator.GenerateTicketNumber(),
                 Title = title,
                 Description = description,
                 CategoryId = categoryId,
-                Priority = priority,
+                Room = room,
                 RequesterId = userId,
                 Status = "open",
+                Priority = priority.ToLower(),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -130,15 +140,14 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
 
             return ApiResultResponse.Ok("Ticket created successfully");
         }
-        catch (DbUpdateException)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             return ApiResultResponse.Error("Failed to create ticket");
         }
     }
 
-    public async Task<ApiResultResponse> UpdateTicketByAdminAsync(int userId, int ticketId, int assigned, string status,
-        string note)
+    public async Task<ApiResultResponse> UpdateTicketByAdminAsync(int userId, int ticketId, int assigned, string status, string priority, string note)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
 
@@ -171,9 +180,21 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
             if (!string.IsNullOrEmpty(note)) ticket.Resolution = note;
 
             ticket.Status = status;
+            ticket.Priority = priority;
             ticket.AssignedId = assigned;
+            ticket.UpdatedAt = DateTime.UtcNow;
 
             await db.SaveChangesAsync();
+            
+            if (status == "resolved") await notifyRepository.CreateNotification(ticket.Id, ticket.RequesterId, "ticket_resolved");
+            if (status == "closed") await notifyRepository.CreateNotification(ticket.Id, ticket.RequesterId, "ticket_rejected");
+            
+            if (status == "resolved" || status == "closed")
+            {
+                ticket.ResolvedAt = DateTime.UtcNow;
+                await db.SaveChangesAsync();
+            }
+            
             await transaction.CommitAsync();
 
             return ApiResultResponse.Ok("Ticket updated successfully");
@@ -185,8 +206,7 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
         }
     }
 
-    public async Task<ApiResultResponse> UpdateTicketByUserAsync(int ticketId, string title, string description,
-        int categoryId, string priority, List<IFormFile> files)
+    public async Task<ApiResultResponse> UpdateTicketByUserAsync(int ticketId, string title, string description, int categoryId, string room, List<IFormFile> files)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
         try
@@ -198,14 +218,23 @@ public class TicketRepository(AppDbContext db, IFileRepository fileRepository) :
             ticket.Title = title;
             ticket.Description = description;
             ticket.CategoryId = categoryId;
-            ticket.Priority = priority;
+            ticket.Room = room;
 
             await db.SaveChangesAsync();
+            
+            var fileResponse = await fileRepository.SaveTicketAttachmentsAsync(ticket.Id, files);
+            
+            if (!fileResponse.Success)
+            {
+                await transaction.RollbackAsync();
+                return ApiResultResponse.Error("Failed to create ticket attachments");
+            }
+            
             await transaction.CommitAsync();
 
             return ApiResultResponse.Ok("Ticket updated successfully");
         }
-        catch (DbUpdateException)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             return ApiResultResponse.Error("Failed to update ticket");

@@ -85,9 +85,12 @@
     </div>
 </section>
 
+@await Html.PartialAsync("_AiChatSupport")
+
 @section Scripts {
     <script src="~/js/libs/utils.js"></script>
     <script src="~/js/libs/pagination.js"></script>
+    <script src="~/js/ai-chat-support.js" asp-append-version="true"></script>
     <script>
         let currentPage = 1;
         let limit = 10;
