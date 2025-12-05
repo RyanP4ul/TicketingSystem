@@ -102,6 +102,15 @@
                         </span>
                     </a>
                 }
+                else if (User.IsInRole(nameof(UserRole.Technician)))
+                {
+                    <a asp-area="Technician" asp-controller="Admin" asp-action="Index" class="flex ms-2 md:me-24">
+                        <span class="flex space-x-1 self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">
+                            <span>Technician</span>
+                            <span class="text-yellow-400">Portal</span>
+                        </span>
+                    </a>
+                }
                 else
                 {
                     <a asp-area="User" asp-controller="User" asp-action="Index" class="flex ms-2 md:me-24">
@@ -124,9 +133,6 @@
                         </button>
 
                         <div id="dropdownNotification" class="bg-white z-100 hidden w-full max-w-sm bg-neutral-primary-soft divide-y divide-default-medium rounded-base shadow" aria-labelledby="dropdownNotificationButton">
-                            @* <div class="block px-4 py-2 font-medium text-center text-body rounded-t-base bg-neutral-secondary-medium"> *@
-                            @*     Notifications *@
-                            @* </div> *@
                             <div class="flex align-items-center justify-between px-4 py-3 font-medium text-center text-body rounded-t-base bg-white">
                                 <div class="text-base font-bold text-heading">Notifications</div>
                                 <button type="button" id="notification-clear" class="text-sm text-fg-brand hover:underline">Clear</button>
@@ -140,18 +146,9 @@
                                     </div>
                                 </a>
                             </div>
-                            @* <a href="#" class="block py-2 font-medium text-center text-body rounded-b-base bg-neutral-secondary-medium hover:bg-neutral-tertiary-medium"> *@
-                            @*     <div class="inline-flex items-center "> *@
-                            @*         <svg class="w-5 h-5 me-1.5 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"> *@
-                            @*             <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/><path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/> *@
-                            @*         </svg> *@
-                            @*         View all *@
-                            @*     </div> *@
-                            @* </a> *@
                         </div>
                     </div>
-
-
+                    
                     <div>
                         <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                             <span class="sr-only">Open user menu</span>

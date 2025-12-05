@@ -12,7 +12,11 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         if (User.Identity?.IsAuthenticated == false) return RedirectToAction("Login", "Auth");
-        return User.IsInRole("Admin") ? RedirectToAction("Index", "Admin") : RedirectToAction("Index", "User");
+
+        if (User.IsInRole("Admin")) return RedirectToAction("Index", "Admin");
+        if (User.IsInRole("Technician")) return Redirect("/Technician");
+
+        return RedirectToAction("Index", "User");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

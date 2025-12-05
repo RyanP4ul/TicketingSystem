@@ -1,0 +1,218 @@
+﻿@using LanBasedHelpDeskTickingSystem.Entities.Models
+@model LanBasedHelpDeskTickingSystem.Entities.DTOs.AdminKbDto
+@{
+    ViewData["Title"] = "Knowledge Base";
+    const string modalForm = "form-modal";
+    const string modelConfirm = "confirm-article-modal";
+}
+
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+@await Html.PartialAsync("_Navbar")
+
+<div id="@modalForm" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    KB Article
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="@modalForm">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+
+            <div class="p-4 md:p-5">
+                <form id="form" class="space-y-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+                        <input asp-for="Title" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter article title"/>
+                        <p id="error-title" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
+                        <textarea  asp-for="Content" rows="4" class="block w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
+                        <p id="error-content" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                            <select asp-for="CategoryId" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="-1" selected>Choose a category</option>
+                                @foreach (Category category in ViewBag.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                            <p id="error-categoryid" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+                        </div>
+                        <div class="col-span-12 md:col-span-6">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+                            <input asp-for="Tags" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter tags"/>
+                            <p id="error-tags" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-btn w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="@modelConfirm" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="@modelConfirm">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to continue</h3>
+                <button data-modal-hide="@modelConfirm" type="button" class="confirm-btn text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    Yes, I'm sure
+                </button>
+                <button data-modal-hide="@modelConfirm" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 sm:ml-64">
+        <div class="mt-14">
+
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Knowledge Base</h1>
+                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Manage help articles and documentation</p>
+                </div>
+                <div>
+                    <button data-modal-toggle="@modalForm" data-modal-target="@modalForm" type="button" class="insert-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 z-999">
+                        <svg class="inline w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                        </svg>
+                        New KB Article
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5h6M9 9h6m-6 4h6M2 1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-4">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Articles</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">@ViewBag.TotalArticles</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100 dark:bg-yellow-900">
+                                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8Zm1-12h-2v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-4">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Published</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">@ViewBag.TotalPublishedArticles</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 1m0 0a2.25 2.25 0 0 0 0 4.5M4 1m0 0a2.25 2.25 0 0 1 0 4.5m12 7.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M16 1m0 0a2.25 2.25 0 0 0 0 4.5M16 1m0 0a2.25 2.25 0 0 1 0 4.5M10 4.25V1m0 3.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 1m0 0a2.25 2.25 0 0 0 0 4.5M10 1m0 0a2.25 2.25 0 0 1 0 4.5m0 11.25V13m0 3.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 13m0 0a2.25 2.25 0 0 0 0 4.5M10 13m0 0a2.25 2.25 0 0 1 0 4.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-4">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Drafts</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">@ViewBag.TotalDrafs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900">
+                                <svg class="w-6 h-6 text-green-600 dark:text-green-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+                                    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                    <path d="M10 13c-5 0-9-3.5-9-5.5S5 2 10 2s9 3.5 9 5.5-4 5.5-9 5.5Z"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-4">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Views</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">@ViewBag.TotalViewArticles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-white flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-4">
+                <div class="w-full md:w-1/2">
+                    <form class="flex items-center">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search articles...">
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <select id="categoryFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option>All Categories</option>
+                        @foreach (Category category in ViewBag.Categories)
+                        {
+                            <option value="@category.Name">@category.Name</option>
+                        }
+                    </select>
+                    <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected="">Newest First</option>
+                        <option value="">Oldest First</option>
+                        <option value="">Most Viewed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="listContainer" class="space-y-4"></div>
+            
+            <nav class="flex items-center justify-between p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Total Row(s): <span id="total-rows" class="font-semibold text-gray-900 dark:text-white">3</span></span>
+                <ul id="pagination" class="inline-flex -space-x-px text-sm h-8"></ul>
+            </nav>
+            
+            @await Html.PartialAsync("_Footer")
+        </div>
+    </div>
+
+@section Scripts {
+    <script src="~/js/libs/utils.js" asp-append-version="true"></script>
+    <script src="~/js/libs/toast.js" asp-append-version="true"></script>
+    <script src="~/js/libs/pagination.js" asp-append-version="true"></script>
+    <script src="~/js/technician/kb.js" asp-append-version="true"></script>
+}

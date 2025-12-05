@@ -160,7 +160,7 @@ public class TicketRepository(AppDbContext db, INotifyRepository notifyRepositor
                 return ApiResultResponse.Error("Ticket not found");
             }
 
-            if (status == "resolved" || status == "closed")
+            if (ticket.Status == "resolved" || ticket.Status == "closed")
             {
                 return ApiResultResponse.Error("Cannot update a resolved or closed ticket");
             }
@@ -172,16 +172,17 @@ public class TicketRepository(AppDbContext db, INotifyRepository notifyRepositor
                 return ApiResultResponse.Error("User not found");
             }
 
-            if (ticket.AssignedId != user.Id)
+            if ((assigned > 0 && ticket.AssignedId != user.Id))
             {
-                return ApiResultResponse.Error("You are not assigned to this ticket");
+                return ApiResultResponse.Error($"You are not assigned to this ticket");
             }
 
-            if (!string.IsNullOrEmpty(note)) ticket.Resolution = note;
+            if (!string.IsNullOrEmpty(note) && note != "none") ticket.Resolution = note;
 
             ticket.Status = status;
             ticket.Priority = priority;
-            ticket.AssignedId = assigned;
+            
+            if (assigned > 0) ticket.AssignedId = assigned;
             ticket.UpdatedAt = DateTime.UtcNow;
 
             await db.SaveChangesAsync();
@@ -293,4 +294,37 @@ public class TicketRepository(AppDbContext db, INotifyRepository notifyRepositor
             return ApiResultResponse.Error("Failed to delete ticket attachment");
         }
     }
+    
+    public async Task UpdateArticleViewCountAsync(int ticketId)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var ticket = await db.SetEntity<Ticket>().FirstOrDefaultAsync(x => x.Id == ticketId);
+
+            if (ticket == null) return;
+
+            ticket.ViewCount += 1;
+                
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+        }
+    }
+    
+    public async Task<IEnumerable<Ticket>> GetPopularTicketByViewsAsync()
+    {
+        var ticket = await db.SetEntity<Ticket>()
+            .Include(x => x.Category)
+            .OrderByDescending(t => t.ViewCount)
+            .Take(4)
+            .ToListAsync();
+
+        return ticket!;
+    }
+    
 }

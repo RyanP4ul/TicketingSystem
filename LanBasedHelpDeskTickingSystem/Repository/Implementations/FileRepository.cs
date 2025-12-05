@@ -77,4 +77,18 @@ public class FileRepository(AppDbContext db, IFileService fileService) : IFileRe
         }
     }
     
+    // public async Task DownloadCsvAsync(int ticketId, HttpResponse response)
+    // {
+    //     var attachments = await db.SetEntity<Attachment>()
+    //         .Where(a => a.TicketId == ticketId)
+    //         .ToListAsync();
+    //
+    //     var csvContent = "AttachmentId,FileName,FileExtension,UploadedAt\n" +
+    //                      string.Join("\n", attachments.Select(a => $"{a.Id},{a.FileName},{a.FileExtension},{a.UploadedAt:O}"));
+    //
+    //     response.ContentType = "text/csv";
+    //     response.Headers.Add("Content-Disposition", $"attachment; filename=\"ticket_{ticketId}_attachments.csv\"");
+    //     await response.WriteAsync(csvContent);
+    // }
+    
 }

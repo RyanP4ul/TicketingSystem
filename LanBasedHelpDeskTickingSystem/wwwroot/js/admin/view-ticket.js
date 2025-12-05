@@ -17,6 +17,8 @@ function cacheElements() {
     elements.comment = document.getElementById("comment");
     elements.commentLists = document.getElementById("comment-lists");
     elements.commentBtn = document.getElementById("add-comment-btn");
+    
+    elements.resolution = document.getElementById("resolution");
 }
 
 function openZoom(element) {
@@ -50,6 +52,7 @@ async function handleUpdateTicket(e) {
     const status = elements.selectStatus.value;
     const priority = elements.selectPriority.value;
     const assignedTo = elements.assignedTo.value;
+    const resolution = elements.resolution.value;
 
     const response = await fetch(API_URL, {
         method: "PUT",
@@ -61,7 +64,7 @@ async function handleUpdateTicket(e) {
             status: status,
             priority: priority,
             assigned: assignedTo,
-            notes: "none"
+            notes: resolution
         })
     });
     

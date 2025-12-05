@@ -10,4 +10,5 @@ public interface ICategoryRepository
     public Task<ApiResultResponse> InsertCategoryAsync(string name, string description);
     public Task<ApiResultResponse> UpdateCategoryAsync(int id, string name, string description);
     public Task<ApiResultResponse> DeleteCategoryByIdAsync(int id);
+    public Task<IEnumerable<Category>> GetPopularCategoriesAsync();
 }

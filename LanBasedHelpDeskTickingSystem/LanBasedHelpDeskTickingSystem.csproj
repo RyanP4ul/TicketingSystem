@@ -16,11 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\Technician\" />
-      <Folder Include="Views\Shared\Technician\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\AdminTicket\Index.cshtml" />
     </ItemGroup>
 

@@ -13,6 +13,13 @@
 
 <div class="p-4 sm:ml-64">
     <div class="mt-14">
+        <a asp-area="User" asp-action="Index" asp-controller="Ticket" class="flex items-center text-sm font-medium text-blue-600 hover:underline mb-4">
+            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0l4-4M1 5l4 4"/>
+            </svg>
+            Back to all my tickets
+        </a>
+        
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
                 <div class="flex items-center gap-3 mb-1">
@@ -22,7 +29,7 @@
                 <p class="text-sm text-gray-500">Ticket <span class="font-mono text-gray-700 font-bold">#@ViewBag.Ticket.TicketNumber</span></p>
             </div>
         </div>
-        
+
         <form id="form" data-id="@ViewBag.Ticket.Id">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-6">
@@ -86,7 +93,7 @@
                             <ul id="file-list-container" class="mt-6 mb-6 space-y-4"></ul>
                             <p id="error-file" class="mt-2 text-sm text-red-600 dark:text-red-500"></p>
                         </div>
-                        
+
                         @* <div class="flex items-center justify-center w-full"> *@
                         @*     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"> *@
                         @*         <div class="flex flex-col items-center justify-center pt-5 pb-6"> *@

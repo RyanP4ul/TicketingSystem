@@ -111,7 +111,7 @@ function createItemHtml(item) {
                     ${item.title}
                     <p class="text-xs font-normal text-gray-500 dark:text-gray-400">${item.description}</p>
                 </th>
-                <td class="px-6 py-4">${item.requester?.username ?? "Unknown User"}</td>
+                <td class="px-6 py-4">${item.assigned?.username ?? "None"}</td>
                 <td class="px-6 py-4">
                     ${getStatusBadge(item.status)}
                 </td>

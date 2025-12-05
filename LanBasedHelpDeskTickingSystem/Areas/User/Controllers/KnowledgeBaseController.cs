@@ -10,17 +10,19 @@ namespace LanBasedHelpDeskTickingSystem.Areas.User.Controllers;
 [Area("User")]
 [Route("User/KnowledgeBase")]
 [Authorize(Roles = nameof(UserRole.User))]
-public class KnowledgeBaseController(AppDbContext db, ICategoryRepository categoryRepository, IKnowledgeBaseRepository knowledgeBaseRepository) : Controller
+public class KnowledgeBaseController(AppDbContext db, ICategoryRepository categoryRepository, IKnowledgeBaseRepository knowledgeBaseRepository, ITicketRepository ticketRepository) : Controller
 {
     
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var categories = await categoryRepository.GetAllCategoriesAsync();
-        
+        var categories = await categoryRepository.GetPopularCategoriesAsync();
+        var tickets = await ticketRepository.GetPopularTicketByViewsAsync();
+
         return View("Student/KnowledgeBase/Index", new UserKbViewModel
         {
-            Categories = categories
+            Categories = categories,
+            Tickets = tickets
         });
     }
     
@@ -33,6 +35,8 @@ public class KnowledgeBaseController(AppDbContext db, ICategoryRepository catego
         {
             return RedirectToAction("Index");
         }
+        
+        await ticketRepository.UpdateArticleViewCountAsync(id);
         
         return View("Student/KnowledgeBase/ViewKb", article);
     }

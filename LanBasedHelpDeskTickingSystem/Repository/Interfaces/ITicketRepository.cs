@@ -16,4 +16,6 @@ public interface ITicketRepository
     public Task<ApiResultResponse> UpdateTicketByUserAsync(int ticketId, string title, string description, int categoryId, string room, List<IFormFile> files);
     public Task<ApiResultResponse> DeleteTicketAsync(int userId, int ticketId);
     public Task<ApiResultResponse> DeleteTicketAttachmentByUserAsync(int ticketId, int attachmentId);
+    public Task UpdateArticleViewCountAsync(int ticketId);
+    public Task<IEnumerable<Ticket>> GetPopularTicketByViewsAsync();
 }

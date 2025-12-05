@@ -72,6 +72,10 @@ public class Ticket
     [Column("deleted_at")]
     public DateTime DeletedAt { get; set; }
     
+    [Required]
+    [Column("view_count")]
+    public int ViewCount { get; set; }
+    
     public User? Requester { get; set; }
     public User? Assigned { get; set; }
     public Category? Category { get; set; }

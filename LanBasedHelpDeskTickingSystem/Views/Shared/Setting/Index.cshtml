@@ -1,0 +1,98 @@
+﻿@using LanBasedHelpDeskTickingSystem.Utils
+@model LanBasedHelpDeskTickingSystem.Entities.Views.AdminViewModel
+@{
+    ViewData["Title"] = "Setting";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<div class="p-4 sm:ml-64 fade-in">
+    <div class="mt-14">
+        <div class="flex pt-16 h-screen">
+
+                <main class="flex-1 overflow-y-auto p-8">
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">Settings</h1>
+                            <p class="text-gray-500 mt-1">Manage global application preferences.</p>
+                        </div>
+                    </div>
+        
+                    <div class="max-w-4xl mx-auto space-y-6">
+        
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h2 class="text-lg font-semibold text-gray-800">Appearance</h2>
+                            </div>
+                            <div class="p-6 flex items-center justify-between">
+                                <div>
+                                    <div class="font-medium text-gray-900">Dark Mode</div>
+                                    <div class="text-sm text-gray-500 mt-1">Switch between light and dark themes.</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                        </div>
+        
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h2 class="text-lg font-semibold text-gray-800">Notifications</h2>
+                            </div>
+                            <div class="p-6 space-y-6">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="email_notif" type="checkbox" checked class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 text-primary">
+                                    </div>
+                                    <label for="email_notif" class="ml-3 text-sm">
+                                        <span class="font-medium text-gray-900 block">Email Notifications</span>
+                                        <span class="text-gray-500 block">Receive daily summaries and critical alerts via email.</span>
+                                    </label>
+                                </div>
+        
+                                <hr class="border-gray-100">
+        
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="push_notif" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 text-primary">
+                                    </div>
+                                    <label for="push_notif" class="ml-3 text-sm">
+                                        <span class="font-medium text-gray-900 block">Browser Push Notifications</span>
+                                        <span class="text-gray-500 block">Get real-time popups when tickets are assigned to you.</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div id="aiSettingsSection" class="bg-white rounded-lg shadow-sm border border-blue-200 ring-2 ring-blue-50 relative overflow-hidden transition-all duration-300">
+                            <div class="bg-blue-50 px-6 py-3 border-b border-blue-100 flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-robot text-primary"></i>
+                                    <h2 class="text-lg font-semibold text-blue-900">AI Instructions</h2>
+                                </div>
+                                <span class="bg-blue-200 text-blue-800 text-xs px-2 py-0.5 rounded font-bold uppercase tracking-wider">Admin Only</span>
+                            </div>
+                            
+                            <div class="p-6">
+                                <div class="mb-4">
+                                    <label for="ai_instruction_text" class="block mb-2 text-sm font-medium text-gray-900">System Prompt</label>
+                                    <p class="text-sm text-gray-500 mb-3">
+                                        Provide instructions for the AI assistant. This controls how the AI categorizes tickets and suggests solutions.
+                                    </p>
+                                    <textarea id="ai_instruction_text" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. You are a helpful IT support assistant. Always prioritize network security tickets..."></textarea>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button class="text-white bg-primary hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none">
+                                        Save Instructions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+        
+                    </div>
+                </main>
+            </div>
+    </div>
+</div>

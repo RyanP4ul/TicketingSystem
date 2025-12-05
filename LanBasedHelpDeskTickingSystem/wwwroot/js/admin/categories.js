@@ -51,6 +51,11 @@ function renderSkeleton() {
     `;
 }
 
+// <td className="px-6 py-4">
+//     <a href="#" data-id="${item.id}" data-type="edit" data-modal-toggle="${MODAL_FORM_ID}" className="edit-btn font-medium text-blue-600 hover:underline">Edit</a>
+//     <a href="#" data-id="${item.id}" data-type="delete" data-modal-toggle="${MODAL_CONFIRM_ID}" className="font-medium text-blue-600 hover:underline">Delete</a>
+// </td>
+
 function createItemHtml(item)
 {
     return `
@@ -60,9 +65,10 @@ function createItemHtml(item)
                     <p class="text-xs font-normal text-gray-500 dark:text-gray-400">${item.description}</p>
                 </th>
                 <td class="px-6 py-4">${new Date(item.createdAt).toLocaleDateString()}</td>
+                
                 <td class="px-6 py-4">
-                <button type="button" data-id="${item.id}" data-type="edit" data-modal-toggle="${MODAL_FORM_ID}" class="edit-btn text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Edit</button>
-                        <button type="button" data-id="${item.id}" data-type="delete" data-modal-toggle="${MODAL_CONFIRM_ID}" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete</button>
+                <button type="button" data-id="${item.id}" data-type="edit" data-modal-toggle="${MODAL_FORM_ID}" class="edit-btn font-medium text-blue-600 hover:underline mr-2">Edit</button>
+                        <button type="button" data-id="${item.id}" data-type="delete" data-modal-toggle="${MODAL_CONFIRM_ID}" class="font-medium text-red-600 hover:underline">Delete</button>
 
                 </td>
             </tr>
@@ -146,8 +152,6 @@ function handleInsertClick() {
 }
 
 async function handleListClick(e) {
-    console.log("handleListClick;");
-    
     const button = e.target.closest('button[data-id]');
     if (!button) {
         console.log("error button;");
@@ -262,9 +266,6 @@ async function handleConfirm() {
     if (currentAction === 'delete') {
         url = `${API_URL}/${currentArticleId}`;
         method = 'DELETE';
-    } else if (currentAction === 'publish') {
-        url = `${API_URL}/publish/${currentArticleId}`;
-        method = 'PUT';
     } else {
         return;
     }

@@ -126,4 +126,21 @@ public class CategoryRepository(AppDbContext db) : ICategoryRepository
         }
     }
     
+    public async Task<IEnumerable<Category>> GetPopularCategoriesAsync()
+    {
+        return await db.SetEntity<Ticket>()
+            .Where(x => !x.IsDeleted)
+            .GroupBy(t => t.CategoryId)
+            .OrderByDescending(g => g.Count())
+            .Take(5)
+            .Select(g => new Category
+            {
+                Id = g.Key,
+                Name = db.SetEntity<Category>().Where(c => c.Id == g.Key).Select(c => c.Name).FirstOrDefault() ?? string.Empty,
+                Description = db.SetEntity<Category>().Where(c => c.Id == g.Key).Select(c => c.Description).FirstOrDefault() ?? string.Empty,
+                Count = g.Count()
+            })
+            .ToListAsync();
+    }
+    
 }

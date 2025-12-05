@@ -14,12 +14,12 @@
                 <p class="text-base font-normal text-gray-500 dark:text-gray-400">Manage and track all help desk tickets</p>
             </div>
             <div>
-                <button type="button" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                <a href="/api/admin/tickets/export" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                     <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h18M1 5v14h18V5M1 5V1h18v4M5 15h10M5 10h10"/>
                     </svg>
                     Export CSV
-                </button>
+                </a>
             </div>
         </div>
 
@@ -68,7 +68,7 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">Ticket Subject</th>
-                        <th scope="col" class="px-6 py-3">Reporter</th>
+                        <th scope="col" class="px-6 py-3">Assigned to</th>
                         <th scope="col" class="px-6 py-3">Status</th>
                         <th scope="col" class="px-6 py-3">Category</th>
                         <th scope="col" class="px-6 py-3">Priority</th>

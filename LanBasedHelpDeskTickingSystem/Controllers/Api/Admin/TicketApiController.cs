@@ -1,10 +1,12 @@
-﻿using LanBasedHelpDeskTickingSystem.Data;
+﻿using System.Data;
+using LanBasedHelpDeskTickingSystem.Data;
 using LanBasedHelpDeskTickingSystem.Entities.Enums;
 using LanBasedHelpDeskTickingSystem.Entities.Models;
 using LanBasedHelpDeskTickingSystem.Entities.Responses;
 using LanBasedHelpDeskTickingSystem.Entities.Views;
 using LanBasedHelpDeskTickingSystem.Libs;
 using LanBasedHelpDeskTickingSystem.Repository.Interfaces;
+using LanBasedHelpDeskTickingSystem.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,7 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         if (!string.IsNullOrEmpty(category)) query = query.Where(t => t.Category != null && t.Category.Name == category);
         if (!string.IsNullOrEmpty(priority)) query = query.Where(t => t.Priority == priority);
 
-        var ticketsQuery = query.Include(x => x.Requester).Where(x => !x.IsDeleted).OrderBy(t => t.Id);
+        var ticketsQuery = query.Include(x => x.Assigned).Where(x => !x.IsDeleted).OrderBy(t => t.Id);
         var paginatedTickets = await PaginatedList<Ticket>.CreateAsync(ticketsQuery, page, limit);
         
         return Ok(PaginateResponse<Ticket>.Create(paginatedTickets));
@@ -54,6 +56,42 @@ public class TicketApiController(AppDbContext db, ITicketRepository ticketReposi
         if (!response.Success) return BadRequest(response);
         
         return Ok(response);
+    }
+    
+    [HttpGet("export")]
+    public async Task<IActionResult> ExportTickets()
+    {
+        var query = db.SetEntity<Ticket>()
+            .Include(x => x.Category)
+            .AsNoTracking();
+
+        var tickets = await query.Where(x => !x.IsDeleted).OrderBy(t => t.Id).ToListAsync();
+
+        
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Id");
+        dt.Columns.Add("Ticket Number");
+        dt.Columns.Add("Title");
+        dt.Columns.Add("Description");
+        dt.Columns.Add("Room");
+        dt.Columns.Add("Status");
+
+        foreach (var ticket in tickets)
+        {
+            dt.Rows.Add(
+                ticket.Id,
+                ticket.TicketNumber,
+                ticket.Title,
+                ticket.Description,
+                ticket.Room,
+                ticket.Status
+            );
+        }
+        
+        var csvData = Datatable.DataTableToCsv(dt);
+        var bytes = System.Text.Encoding.UTF8.GetBytes(csvData);
+        
+        return File(bytes, "text/csv", "tickets_export.csv");
     }
     
 }

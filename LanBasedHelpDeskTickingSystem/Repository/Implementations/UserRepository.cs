@@ -1,5 +1,6 @@
 ﻿using LanBasedHelpDeskTickingSystem.Data;
 using LanBasedHelpDeskTickingSystem.Entities.Models;
+using LanBasedHelpDeskTickingSystem.Entities.Responses;
 using LanBasedHelpDeskTickingSystem.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,7 +39,7 @@ public class UserRepository(AppDbContext db) : IUserRepository
     public async Task<IEnumerable<User>> GetAllTechniciansAsync()
     {
         return await db.SetEntity<User>()
-            .Where(u => u.Roles == Entities.Enums.UserRole.Admin)
+            .Where(u => u.Roles == Entities.Enums.UserRole.Technician || u.Roles == Entities.Enums.UserRole.Admin)
             .ToListAsync();
     }
 
@@ -69,6 +70,32 @@ public class UserRepository(AppDbContext db) : IUserRepository
         }
 
         return null;
+    }
+
+    public async Task<ApiResultResponse> UpdateUser(int userId, string email, string username, string role)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var user = await db.SetEntity<User>().FirstOrDefaultAsync(x => x.Id == userId);
+            
+            if (user == null) return ApiResultResponse.Error("User not found.");
+            
+            user.Email = email;
+            user.Username = username;
+            user.Roles = Enum.Parse<Entities.Enums.UserRole>(role);
+
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
+            
+            return ApiResultResponse.Ok("User updated successfully.");
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ApiResultResponse.Error("An error occurred while updating the user.");
+        }
     }
     
 }

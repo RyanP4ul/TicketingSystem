@@ -17,7 +17,7 @@ public class AdminController(IAdminDashboardRepository adminDashboardRepository,
     public async Task<IActionResult> Index()
     {
         var categories = await categoryRepository.GetAllCategoriesAsync();
-        var recentTickets = await ticketRepository.GetRecentTicketsAsync(10);
+        var recentTickets = await ticketRepository.GetRecentTicketsAsync(5);
         var perDay = await ticketRepository.GetTicketPerDay();
         var popularCategories = await ticketRepository.GetTicketCategoryPopularityAsync();
         

@@ -1,0 +1,96 @@
+﻿@model IEnumerable<LanBasedHelpDeskTickingSystem.Entities.Models.Category>
+@{
+    ViewData["Title"] = "Technician Tickets";
+}
+
+@await Html.PartialAsync("_Navbar")
+
+<div class="p-4 sm:ml-64">
+    <div class="mt-14">
+
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">All Tickets</h1>
+                <p class="text-base font-normal text-gray-500 dark:text-gray-400">Manage and track all help desk tickets</p>
+            </div>
+            <div>
+                <button type="button" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h18M1 5v14h18V5M1 5V1h18v4M5 15h10M5 10h10"/>
+                    </svg>
+                    Export CSV
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-4 flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4">
+                <div class="w-full md:w-1/2">
+                    <form class="flex items-center">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <select id="statusFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option>All Status</option>
+                        <option selected>Open</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <select id="categoryFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>All Categories</option>
+                        @foreach (var category in Model)
+                        {
+                            <option>@category.Name</option>
+                        }
+                    </select>
+                    <select id="priorityFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Ticket Subject</th>
+                        <th scope="col" class="px-6 py-3">Reporter</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Priority</th>
+                        <th scope="col" class="px-6 py-3">Date</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listContainer"></tbody>
+                </table>
+            </div>
+            <nav class="flex items-center justify-between p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Total Row(s): <span id="total-rows" class="font-semibold text-gray-900 dark:text-white">3</span></span>
+                <ul id="pagination" class="inline-flex -space-x-px text-sm h-8"></ul>
+            </nav>
+        </div>
+        @await Html.PartialAsync("_Footer")
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/libs/utils.js" asp-append-version="true"></script>
+    <script src="~/js/libs/toast.js" asp-append-version="true"></script>
+    <script src="~/js/libs/pagination.js" asp-append-version="true"></script>
+    <script src="~/js/technician/tickets.js" asp-append-version="true"></script>
+}

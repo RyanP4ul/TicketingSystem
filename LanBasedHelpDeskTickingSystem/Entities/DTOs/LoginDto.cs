@@ -4,7 +4,7 @@ namespace LanBasedHelpDeskTickingSystem.Entities.DTOs;
 
 public class LoginDto
 {
-    [Required(ErrorMessage = "Username or Email is required.")]
+    [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Please enter a valid email address")]
     public required string UsernameOrEmail { get; set; }
     

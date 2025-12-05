@@ -5,85 +5,89 @@
 
 @await Html.PartialAsync("_Navbar")
 
-<section class="py-12 px-4 max-w-screen-xl mx-auto">
+<div class="p-4 sm:ml-64">
+    <div class="mt-14">
+        <div class="text-center py-8">
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white mb-2">Knowledge Base</h1>
+            <p class="text-lg font-normal text-gray-500 dark:text-gray-400 mb-8">Find answers to common questions and get help with technology issues</p>
 
-    <div class="text-center mb-10">
-        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Knowledge Base</h1>
-        <p class="text-lg text-gray-500 dark:text-gray-400">Find answers to common questions and get help with technology issues</p>
-    </div>
-
-    <div class="max-w-2xl mx-auto mb-10">
-        <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Tickets" required/>
+            <form class="max-w-2xl mx-auto">
+                <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Tickets, Articles, or Keywords..." required>
+                </div>
+            </form>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-4">
 
-        <aside class="lg:col-span-1 space-y-6">
+            <div class="xl:col-span-1 space-y-6">
+                <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-4">
+                    <h5 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Categories</h5>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" data-category="" class="flex items-center p-2 text-blue-700 bg-blue-50 rounded-lg group hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-300">
+                                <span class="flex-1 ms-1 font-medium whitespace-nowrap">All Articles</span>
+                            </a>
+                        </li>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li>
+                                <a href="#" data-category="@category.Name" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-50 group">
+                                    <span class="flex-1 ms-1 font-medium whitespace-nowrap">@category.Name</span>
+                                    <span class="text-gray-500 text-sm">@category.Count</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
 
-            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Categories</h3>
-                <ul class="space-y-1">
-                    <li>
-                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg dark:bg-gray-700 dark:text-white">
-                            <span>All Articles</span>
-                            <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">5</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            <span>Network</span>
-                            <span class="text-gray-500 dark:text-gray-400 text-xs">1</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            <span>Account</span>
-                            <span class="text-gray-500 dark:text-gray-400 text-xs">2</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            <span>Devices</span>
-                            <span class="text-gray-500 dark:text-gray-400 text-xs">2</span>
-                        </a>
-                    </li>
-                </ul>
+                <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-4">
+                    <h5 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Most Popular</h5>
+                    <ul class="space-y-4">
+                        @foreach (var ticket in Model.Tickets)
+                        {
+                            <li>
+                                <a asp-area="User" asp-controller="Ticket" asp-action="ViewTicket" asp-route-id="@ticket.Id" class="block hover:underline">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">@ticket.Title</div>
+                                    <div class="text-xs text-gray-500">@ticket.Category?.Name</div>
+                                </a>
+                            </li>
+                        }
+                        @* <li> *@
+                        @*     <a href="#" class="block hover:underline"> *@
+                        @*         <div class="text-sm font-medium text-gray-900 dark:text-white">How to connect to school wifi</div> *@
+                        @*         <div class="text-xs text-gray-500">Network</div> *@
+                        @*     </a> *@
+                        @* </li> *@
+                        @* <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700"> *@
+                        @* <li> *@
+                        @*     <a href="#" class="block hover:underline"> *@
+                        @*         <div class="text-sm font-medium text-gray-900 dark:text-white">Reset elms password</div> *@
+                        @*         <div class="text-xs text-gray-500">Account</div> *@
+                        @*     </a> *@
+                        @* </li> *@
+                    </ul>
+                </div>
             </div>
 
-            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Most Popular</h3>
-                <ul class="space-y-4">
-                    <li>
-                        <a href="#" class="text-sm font-medium text-gray-900 dark:text-white hover:underline">How to connect to school wifi</a>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Network</p>
-                    </li>
-                    <li>
-                        <a href="#" class="text-sm font-medium text-gray-900 dark:text-white hover:underline">Reset elms password</a>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Account</p>
-                    </li>
-                </ul>
+            <div class="xl:col-span-3">
+                <div id="totalArticle" class="mb-4 text-sm text-gray-500">0 articles found</div>
+
+                <div id="listContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                <nav aria-label="Ticket Pagination" class="mt-6 flex justify-center align-items-center w-full">
+                    <ul id="pagination" class="inline-flex -space-x-px text-base h-10"></ul>
+                </nav>
             </div>
-
-        </aside>
-
-        <main class="lg:col-span-2">
-            <h4 id="totalArticle" class="text-sm text-gray-500 dark:text-gray-400 mb-4">4 articles found</h4>
-
-            <div id="listContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            <nav aria-label="Ticket Pagination" class="mt-6 flex justify-center align-items-center w-full">
-                <ul id="pagination" class="inline-flex -space-x-px text-base h-10"></ul>
-            </nav>
-        </main>
+        </div>
         @await Html.PartialAsync("_Footer")
     </div>
-</section>
+</div>
 
 @await Html.PartialAsync("_AiChatSupport")
 
@@ -152,6 +156,31 @@
         
         document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById('search').addEventListener("input", debounce((e) => handleSearch(e.target.value), 700));
+           
+            var categories = document.querySelectorAll('[data-category]');
+            
+            function refreshCategories()
+            {
+                categories.forEach(categoryElement => {
+                    if (categoryElement.getAttribute('data-category') === category) {
+                        categoryElement.classList.add('bg-blue-50', 'text-blue-700', 'dark:bg-blue-900', 'dark:text-blue-300');
+                        categoryElement.classList.remove('text-gray-900', 'dark:text-white', 'hover:bg-gray-50', 'group');
+                    } else {
+                        categoryElement.classList.remove('bg-blue-50', 'text-blue-700', 'dark:bg-blue-900', 'dark:text-blue-300');
+                        categoryElement.classList.add('text-gray-900', 'dark:text-white', 'hover:bg-gray-50', 'group');
+                    }
+                });
+            }
+            
+            categories.forEach(categoryElement => {
+                categoryElement.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    category = this.getAttribute('data-category');
+                    loadLists(1);
+                    refreshCategories();
+                });
+            });
+            
             await loadLists(currentPage);
         });
     </script>
